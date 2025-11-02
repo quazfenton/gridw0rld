@@ -3,257 +3,1717 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>gridWorld</title>
+    <title>gridWorld - Digital Art Gallery</title>
+    
+    <!-- Waveform visualization for audio -->
+    <script src="https://cdn.jsdelivr.net/npm/wavesurfer.js@7.4.0/dist/wavesurfer.min.js"></script>
+    
+    <!-- Markdown parser -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
     <style>
-        body, html {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body, html {
             height: 100%;
             overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #000;
+            color: #fff;
         }
+        
+        .gallery-container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
         .gallery {
             display: flex;
-            flex-wrap: nowrap;
-            align-items: center;
-            justify-content: flex-start;
-            height: 100vh;
-            overflow-x: auto;
-            overflow-y: hidden;
-            padding: 0 10px;
-            box-sizing: border-box;
-            user-select: none;
-            scroll-behavior: smooth;
-        }
-        .gallery img, .gallery video {
-            width: 100%;
-            height: 75%;
-            object-fit: cover;
-            cursor: pointer;
-            transition: transform 0.3s ease;
-            margin-right: -15px; /* Negative margin for horizontal overlap */
-            margin-bottom: -15px; /* Negative margin for vertical overlap */
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3); /* Optional: adds depth */
-            border-radius: 10px; /* Add this line for rounded corners */
-        }
-        .gallery img:nth-child(odd), .gallery video:nth-child(odd) {
-            transform: translateY(-5px); /* Slight upward offset for odd items */
-        }
-        .gallery img:nth-child(even), .gallery video:nth-child(even) {
-            transform: translateY(5px); /* Slight downward offset for even items */
-        }
-        .gallery img:hover, .gallery video:hover {
-            transform: scale(1.05) translateY(0); /* Reset vertical offset on hover */
-            z-index: 1.5; /* Bring hovered item to front */
-        }
-        .fullscreen {
-            position: fixed;
-            top: 0;
-            left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
+            transition: transform 0.5s ease-in-out;
         }
-        .fullscreen img, .fullscreen video {
-            max-width: 90%;
-            max-height: 90%;
+        
+        .media-item {
+            min-width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            opacity: 1;
+            transition: opacity 0.25s ease-in-out;
+        }
+        
+        .media-content {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        /* Image styles */
+        .media-content img {
+            width: 100%;
+            height: 100%;
             object-fit: contain;
         }
-        .scroll-area {
-            position: fixed;
-            top: 0;
+        
+        /* Video styles */
+        .media-content video {
+            width: 100%;
             height: 100%;
-            width: 50px;
-            z-index: 10;
+            object-fit: contain;
         }
-        .scroll-left {
-            left: 0;
+        
+        /* Text/Markdown content styles with variations */
+        .text-content {
+            width: 80%;
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-height: 90%;
+            overflow-y: auto;
         }
-        .scroll-right {
-            right: 0;
+        
+        /* Base text content styles */
+        .text-content {
+            width: 80%;
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            max-height: 90%;
+            overflow-y: auto;
+        }
+        
+        /* Zine-style variations - Season 1 */
+        .text-content.zine-style-1 {
+            font-family: 'Courier New', monospace;
+            background: rgba(40, 35, 30, 0.9);
+            border: 2px solid #d4af37;
+        }
+        
+        .text-content.zine-style-2 {
+            font-family: 'Georgia', serif;
+            background: rgba(20, 30, 40, 0.9);
+            border: 2px dashed #6c63ff;
+        }
+        
+        .text-content.zine-style-3 {
+            font-family: 'Helvetica', sans-serif;
+            background: rgba(30, 20, 40, 0.9);
+            border: 3px double #ff6b6b;
+        }
+        
+        .text-content.zine-style-4 {
+            font-family: 'Comic Sans MS', cursive;
+            background: rgba(30, 30, 30, 0.95);
+            border: 4px ridge #4ecdc4;
+        }
+        
+        .text-content.zine-style-5 {
+            font-family: 'Times New Roman', serif;
+            background: rgba(40, 25, 25, 0.9);
+            border: 2px outset #f0a0a0;
+        }
+        
+        /* Season 2 - Alternative layouts */
+        .text-content.season-2.zine-style-1 {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            border: 3px solid #ffd700;
+            border-radius: 20px;
+            padding: 3rem;
+        }
+        
+        .text-content.season-2.zine-style-2 {
+            font-family: 'Verdana', sans-serif;
+            background: rgba(0, 0, 0, 0.7);
+            border-left: 8px solid #00ff00;
+            border-right: 8px solid #00ff00;
+        }
+        
+        .text-content.season-2.zine-style-3 {
+            font-family: 'Impact', sans-serif;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23222" opacity="0.2"/><path d="M0 50 L100 50 M50 0 L50 100" stroke="%23444" stroke-width="1"/></svg>');
+            border: 4px groove #ff69b4;
+        }
+        
+        .text-content.season-2.zine-style-4 {
+            font-family: 'Brush Script MT', cursive;
+            background: rgba(255, 248, 220, 0.2);
+            border: 5px double #8b4513;
+        }
+        
+        .text-content.season-2.zine-style-5 {
+            font-family: 'Monaco', monospace;
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px inset #444;
+            box-shadow: inset 0 0 20px rgba(0, 100, 0, 0.5);
+        }
+        
+        /* Season 3 - Alternative layouts */
+        .text-content.season-3.zine-style-1 {
+            font-family: 'Palatino', serif;
+            background: rgba(50, 25, 75, 0.85);
+            border: 3px outset #9370db;
+            border-radius: 15px;
+        }
+        
+        .text-content.season-3.zine-style-2 {
+            font-family: 'Trebuchet MS', sans-serif;
+            background: rgba(139, 0, 0, 0.2);
+            border: 6px ridge #ff4500;
+        }
+        
+        .text-content.season-3.zine-style-3 {
+            font-family: 'Garamond', serif;
+            background: rgba(255, 250, 205, 0.1);
+            border: 2px solid #daa520;
+            border-style: double;
+        }
+        
+        .text-content.season-3.zine-style-4 {
+            font-family: 'Lucida Console', monospace;
+            background: rgba(0, 0, 0, 0.8);
+            border: 3px inset #00ffff;
+        }
+        
+        .text-content.season-3.zine-style-5 {
+            font-family: 'Copperplate', cursive;
+            background: rgba(40, 44, 52, 0.95);
+            border: 4px outset #ff6347;
+        }
+        
+        /* Season 4 - Alternative layouts */
+        .text-content.season-4.zine-style-1 {
+            font-family: 'Book Antiqua', serif;
+            background: rgba(25, 25, 112, 0.7);
+            border: 2px solid #8a2be2;
+            border-radius: 25px;
+        }
+        
+        .text-content.season-4.zine-style-2 {
+            font-family: 'Optima', sans-serif;
+            background: rgba(25, 50, 25, 0.6);
+            border: 5px double #32cd32;
+        }
+        
+        .text-content.season-4.zine-style-3 {
+            font-family: 'Lucida Sans Unicode', sans-serif;
+            background: rgba(70, 130, 180, 0.2);
+            border: 3px ridge #4682b4;
+        }
+        
+        .text-content.season-4.zine-style-4 {
+            font-family: 'Papyrus', fantasy;
+            background: rgba(245, 222, 179, 0.15);
+            border: 4px solid #8b4513;
+        }
+        
+        .text-content.season-4.zine-style-5 {
+            font-family: 'Century Gothic', sans-serif;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px inset #ff00ff;
+            box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+        
+        /* Text Categories - Full Page Maximalist */
+        .text-content.category-maximalist {
+            width: 90%;
+            height: 90%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+        
+        .text-content.category-maximalist h1 {
+            font-size: 3rem;
+            line-height: 1.2;
+            margin: 0;
+        }
+        
+        /* Text Categories - Aphorisms/Ramblings */
+        .text-content.category-aphorisms {
+            width: 85%;
+            padding: 1.5rem;
+            display: block;
+        }
+        
+        .text-content.category-aphorisms .aphorism-entry {
+            margin: 1.5rem 0;
+            padding: 1rem;
+            border-bottom: 1px dotted #666;
+        }
+        
+        .text-content.category-aphorisms .aphorism-entry.aphorism-left {
+            text-align: left;
+            border-left: 3px solid #ff6b6b;
+            margin-right: 20%;
+            padding-left: 1.5rem;
+        }
+        
+        .text-content.category-aphorisms .aphorism-entry.aphorism-right {
+            text-align: right;
+            border-right: 3px solid #6c63ff;
+            margin-left: 20%;
+            padding-right: 1.5rem;
+        }
+        
+        /* Fallback for nth-child in case JavaScript doesn't add classes */
+        .text-content.category-aphorisms .aphorism-entry:nth-child(odd) {
+            text-align: right;
+            border-right: 3px solid #6c63ff;
+            margin-left: 20%;
+            padding-right: 1.5rem;
+        }
+        
+        .text-content.category-aphorisms .aphorism-entry:nth-child(even) {
+            text-align: left;
+            border-left: 3px solid #ff6b6b;
+            margin-right: 20%;
+            padding-left: 1.5rem;
+        }
+        
+        /* Text Categories - Articles */
+        .text-content.category-article {
+            width: 70%;
+            padding: 2.5rem;
+            text-align: left;
+            font-family: 'Georgia', 'Times New Roman', serif;
+            line-height: 1.8;
+            font-size: 1.1rem;
+        }
+        
+        .text-content.category-article h1 {
+            text-align: center;
+            margin: 0 0 1.5rem 0;
+            font-size: 2.2rem;
+            font-weight: bold;
+            color: #f0f0f0;
+        }
+        
+        .text-content.category-article h2 {
+            margin: 2rem 0 1rem 0;
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #6c63ff;
+            border-bottom: 1px solid #444;
+            padding-bottom: 0.3rem;
+        }
+        
+        .text-content.category-article h3 {
+            margin: 1.5rem 0 0.8rem 0;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #ff6b6b;
+        }
+        
+        .text-content.category-article p {
+            margin: 1.2rem 0;
+            text-align: justify;
+            line-height: 1.8;
+        }
+        
+        .text-content.category-article blockquote {
+            margin: 2rem 0;
+            padding: 1rem 1.5rem;
+            border-left: 4px solid #6c63ff;
+            background-color: rgba(0, 0, 0, 0.2);
+            font-style: italic;
+            color: #ccc;
+        }
+        
+        .text-content.category-article .article-image {
+            margin: 2rem auto;
+            display: block;
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+        
+        .text-content.category-article .caption {
+            text-align: center;
+            font-size: 0.9rem;
+            color: #aaa;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+        
+        .text-content.category-article .byline {
+            text-align: center;
+            margin: 1rem 0 2rem 0;
+            font-style: italic;
+            color: #888;
+        }
+        
+        /* Text Categories - Magazine Articles */
+        .text-content.category-magazine {
+            width: 80%;
+            padding: 2rem;
+            text-align: left;
+            font-family: 'Merriweather', 'Georgia', serif;
+            line-height: 1.7;
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid #555;
+        }
+        
+        .text-content.category-magazine h1 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .text-content.category-magazine .subtitle {
+            text-align: center;
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #aaa;
+            font-style: italic;
+        }
+        
+        .text-content.category-magazine .author {
+            text-align: center;
+            font-size: 1rem;
+            margin-bottom: 2rem;
+            color: #888;
+        }
+        
+        .text-content.category-magazine .section-title {
+            font-size: 1.4rem;
+            color: #ff6b6b;
+            margin: 1.5rem 0 1rem 0;
+            text-transform: uppercase;
+            border-bottom: 1px solid #666;
+            padding-bottom: 0.3rem;
+        }
+        
+        .text-content.category-magazine .pull-quote {
+            margin: 1.5rem 0;
+            padding: 1rem 2rem;
+            font-size: 1.3rem;
+            font-style: italic;
+            color: #ffd700;
+            border-left: 4px solid #ffd700;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .text-content.category-magazine .mag-content {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        
+        .text-content.category-magazine .mag-text {
+            flex: 3;
+        }
+        
+        .text-content.category-magazine .mag-aside {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 1rem;
+            border-radius: 5px;
+        }
+        
+        /* Text Categories - Poems */
+        .text-content.category-poem {
+            width: 75%;
+            padding: 2rem;
+            text-align: center;
+        }
+        
+        .text-content.category-poem .poem-lines {
+            line-height: 2;
+            margin: 1.5rem 0;
+        }
+        
+        .text-content.category-poem .poem-title {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+        
+        /* Text Categories - Captions */
+        .text-content.category-caption {
+            width: 60%;
+            padding: 1rem;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        
+        .text-content.category-caption p {
+            font-style: italic;
+            opacity: 0.8;
+        }
+        
+        /* Season-specific variations for each category */
+        .text-content.season-1.category-maximalist h1 { font-size: 3.5rem; }
+        .text-content.season-2.category-maximalist h1 { font-size: 3rem; text-shadow: 2px 2px 4px rgba(255,255,255,0.5); }
+        .text-content.season-3.category-maximalist h1 { font-size: 4rem; letter-spacing: 3px; }
+        .text-content.season-4.category-maximalist h1 { font-size: 2.8rem; text-transform: uppercase; }
+        
+        .text-content.season-1.category-aphorisms .aphorism-entry:nth-child(odd) { margin-left: 10%; }
+        .text-content.season-1.category-aphorisms .aphorism-entry:nth-child(even) { margin-right: 10%; }
+        .text-content.season-3.category-aphorisms .aphorism-entry:nth-child(odd) { border-right: 5px solid #9370db; }
+        .text-content.season-4.category-aphorisms .aphorism-entry:nth-child(even) { border-left: 5px double #00ffff; }
+        
+        .text-content h1, .text-content h2, .text-content h3 {
+            margin: 1rem 0;
+            color: #f0f0f0;
+        }
+        
+        .text-content.zine-style-1 h1, .text-content.zine-style-1 h2, .text-content.zine-style-1 h3 {
+            color: #d4af37;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        
+        .text-content.zine-style-2 h1, .text-content.zine-style-2 h2, .text-content.zine-style-2 h3 {
+            color: #6c63ff;
+            font-style: italic;
+        }
+        
+        .text-content.zine-style-3 h1, .text-content.zine-style-3 h2, .text-content.zine-style-3 h3 {
+            color: #ff6b6b;
+            font-weight: bold;
+        }
+        
+        .text-content.zine-style-4 h1, .text-content.zine-style-4 h2, .text-content.zine-style-4 h3 {
+            color: #4ecdc4;
+            font-weight: 800;
+        }
+        
+        .text-content.zine-style-5 h1, .text-content.zine-style-5 h2, .text-content.zine-style-5 h3 {
+            color: #f0a0a0;
+            font-variant: small-caps;
+        }
+        
+        .text-content p {
+            margin: 1rem 0;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+        
+        .text-content pre {
+            background: #2d2d2d;
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+        
+        .text-content code {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+        
+        .text-content blockquote {
+            border-left: 4px solid #6c63ff;
+            padding-left: 1rem;
+            margin: 1rem 0;
+            font-style: italic;
+            color: #ccc;
+        }
+        
+        /* Audio visualization styles */
+        .audio-content {
+            width: 80%;
+            max-width: 800px;
+            padding: 2rem;
+            background: rgba(30, 30, 30, 0.8);
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .audio-visualization {
+            width: 100%;
+            height: 200px;
+            margin: 2rem 0;
+        }
+        
+        .audio-info {
+            text-align: center;
+            margin-top: 1rem;
+        }
+        
+        .audio-info h3 {
+            margin-bottom: 0.5rem;
+        }
+        
+        /* Loading indicator */
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5rem;
+            z-index: 50;
+        }
+        
+        /* Swipe hint */
+        .swipe-hint {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
         }
     </style>
 </head>
 <body>
-    <div class="gallery" id="gallery"></div>
-    <div class="scroll-area scroll-left" id="scrollLeft"></div>
-    <div class="scroll-area scroll-right" id="scrollRight"></div>
+    <div class="gallery-container">
+        <div class="gallery" id="gallery">
+            <!-- Media items will be loaded here -->
+        </div>
+        
+        <div class="swipe-hint">← Swipe or use arrow keys →</div>
+        
+        <div class="loading" id="loading">Loading gallery...</div>
+    </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const gallery = document.getElementById('gallery');
-            const scrollLeft = document.getElementById('scrollLeft');
-            const scrollRight = document.getElementById('scrollRight');
-            let currentIndex = -1;
-            let mediaItems = [];
-            let touchStartX = 0;
-            let touchEndX = 0;
-            let scrollInterval;
-
-            // Updated loadMedia function
-            async function loadMedia() {
-                try {
-                    const username = 'quazf';
-                    const repo = 'gridWoooorld';
-                    const path = 'content';
-                    const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
-
-                    const response = await fetch(apiUrl);
-                    const data = await response.json();
-
-                    for (let item of data) {
+        // Environment variables - in a real app, this would be loaded from the server
+        // For this demo, we'll hardcode values that would come from .env
+        const env = {
+            DIGITAL_OCEAN_ENABLED: false,
+            DIGITAL_OCEAN_ENDPOINT: 'https://your-space-name.sfo3.digitaloceanspaces.com',
+            DIGITAL_OCEAN_BUCKET: 'your-space-name',
+            DIGITAL_OCEAN_REGION: 'sfo3',
+            DIGITAL_OCEAN_ACCESS_KEY_ID: 'your_access_key',
+            DIGITAL_OCEAN_SECRET_ACCESS_KEY: 'your_secret_key',
+            
+            IPFS_ENABLED: false,
+            IPFS_GATEWAY_URL: 'https://ipfs.io/ipfs/',
+            PINATA_API_KEY: 'your_pinata_api_key',
+            PINATA_SECRET_API_KEY: 'your_pinata_secret_key',
+            
+            GOOGLE_CLOUD_ENABLED: false,
+            GOOGLE_CLOUD_BUCKET_NAME: 'your-bucket-name',
+            GOOGLE_CLOUD_PROJECT_ID: 'your-project-id',
+            GOOGLE_CLOUD_FIREBASE_API_KEY: 'your_firebase_api_key',
+            
+            LOCAL_ENABLED: true,
+            LOCAL_MEDIA_PATH: './content/',
+            
+            MAX_CONCURRENT_LOADS: 5,
+            PRELOAD_DISTANCE: 2,
+            SMOOTH_SCROLL_DURATION: 500,
+            AUTO_PLAY_VIDEOS: true,
+            AUTO_PLAY_AUDIO: true,  // Now enabled as requested
+            
+            // Seasonal layout configuration
+            CURRENT_SEASON: 'season-1', // Change this to switch layouts: 'season-1', 'season-2', 'season-3', 'season-4'
+            ENABLE_ARCHIVE_MODE: false, // Whether archive functionality is active
+        };
+        
+        // Gallery state
+        let mediaItems = [];
+        let currentIndex = 0;
+        let galleryElement = null;
+        let isAnimating = false;
+        
+        // Supported file extensions
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg', '.tiff', '.ico'];
+        const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v', '.3gp'];
+        const audioExtensions = ['.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac', '.wma'];
+        const textExtensions = ['.txt', '.md', '.markdown'];
+        
+        // Zine style variations
+        const zineStyles = ['zine-style-1', 'zine-style-2', 'zine-style-3', 'zine-style-4', 'zine-style-5'];
+        
+        // Initialize the gallery
+        document.addEventListener('DOMContentLoaded', async () => {
+            galleryElement = document.getElementById('gallery');
+            
+            // Load media from configured sources
+            await loadMedia();
+            
+            // Initialize controls
+            initControls();
+            
+            // Initialize archive system
+            initializeArchiveSystem();
+            
+            // Hide loading indicator
+            document.getElementById('loading').style.display = 'none';
+        });
+        
+        // Load media from all configured sources
+        async function loadMedia() {
+            // Start with local media if enabled
+            let allMedia = [];
+            if (env.LOCAL_ENABLED) {
+                const localMedia = await loadLocalMedia();
+                allMedia = [...allMedia, ...localMedia];
+            }
+            
+            // Load from cloud providers
+            if (env.DIGITAL_OCEAN_ENABLED) {
+                const doMedia = await loadFromDigitalOcean();
+                allMedia = [...allMedia, ...doMedia];
+            }
+            
+            if (env.IPFS_ENABLED) {
+                const ipfsMedia = await loadFromIPFS();
+                allMedia = [...allMedia, ...ipfsMedia];
+            }
+            
+            if (env.GOOGLE_CLOUD_ENABLED) {
+                const gcMedia = await loadFromGoogleCloud();
+                allMedia = [...allMedia, ...gcMedia];
+            }
+            
+            // For demo purposes, if no media is loaded, create some placeholder items
+            if (allMedia.length === 0) {
+                // Check for files in the content directory using the old method
+                allMedia = await loadFromGitHubRepo();
+            }
+            
+            // Combine all media items
+            mediaItems = allMedia;
+            
+            // Render the gallery
+            renderGallery();
+        }
+        
+        // Load media from GitHub repo (fallback for demo)
+        async function loadFromGitHubRepo() {
+            try {
+                const username = 'quazf';
+                const repo = 'gridWoooorld';
+                const path = 'content';
+                const apiUrl = `https://api.github.com/repos/${username}/${repo}/contents/${path}`;
+                
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+                
+                const media = [];
+                for (let item of data) {
+                    if (item.type === 'file') {
+                        const fileName = item.name.toLowerCase();
                         const fileUrl = item.download_url;
-                        if (fileUrl.match(/\.(jpe?g|png|gif)$/i)) {
-                            const img = document.createElement('img');
-                            img.src = fileUrl;
-                            img.alt = item.name;
-                            img.addEventListener('click', () => expandMedia(fileUrl, 'image'));
-                            gallery.appendChild(img);
-                            mediaItems.push({ type: 'image', src: fileUrl });
-                        } else if (fileUrl.match(/\.mp4$/i)) {
-                            const video = document.createElement('video');
-                            video.src = fileUrl;
-                            video.muted = true;
-                            video.loop = true;
-                            video.addEventListener('mouseover', () => video.play());
-                            video.addEventListener('mouseout', () => video.pause());
-                            video.addEventListener('click', () => expandMedia(fileUrl, 'video'));
-                            gallery.appendChild(video);
-                            mediaItems.push({ type: 'video', src: fileUrl });
+                        
+                        // Determine media type based on file extension
+                        if (fileName.match(/\.(jpe?g|png|gif|webp|bmp|svg)$/i)) {
+                            media.push({
+                                filename: item.name,
+                                url: fileUrl,
+                                type: 'image',
+                                source: 'github'
+                            });
+                        } else if (fileName.match(/\.(mp4|webm|ogg|mov|avi|mkv)$/i)) {
+                            media.push({
+                                filename: item.name,
+                                url: fileUrl,
+                                type: 'video',
+                                source: 'github'
+                            });
+                        } else if (fileName.match(/\.(mp3|flac|wav|ogg|m4a)$/i)) {
+                            media.push({
+                                filename: item.name,
+                                url: fileUrl,
+                                type: 'audio',
+                                source: 'github'
+                            });
+                        } else if (fileName.match(/\.(txt|md|markdown)$/i)) {
+                            media.push({
+                                filename: item.name,
+                                url: fileUrl,
+                                type: 'text',
+                                source: 'github'
+                            });
                         }
                     }
-                } catch (error) {
-                    console.error('Error loading media:', error);
                 }
+                
+                return media;
+            } catch (error) {
+                console.error('Error loading media from GitHub:', error);
+                return [];
             }
-
-            // Updated expandMedia function
-            function expandMedia(src, type) {
-                const fullscreen = document.createElement('div');
-                fullscreen.className = 'fullscreen';
-                let mediaElement;
-
-                if (type === 'image') {
-                    mediaElement = document.createElement('img');
-                    mediaElement.src = src;
-                } else if (type === 'video') {
-                    mediaElement = document.createElement('video');
-                    mediaElement.src = src;
-                    mediaElement.controls = true;
-                    mediaElement.autoplay = true;
-                    mediaElement.loop = true;
+        }
+        
+        // Load media from local content folder
+        async function loadLocalMedia() {
+            try {
+                // In a real implementation, this would be handled server-side
+                // For now, we'll fetch a manifest file that lists the content
+                // First check if content/manifest.json exists
+                const response = await fetch(`${env.LOCAL_MEDIA_PATH}manifest.json`).catch(() => null);
+                
+                if (response && response.ok) {
+                    const manifest = await response.json();
+                    return manifest.map(item => ({
+                        ...item,
+                        url: `${env.LOCAL_MEDIA_PATH}${item.filename}`,
+                        source: 'local'
+                    }));
+                } else {
+                    // Fallback: scan the content directory for files
+                    // This requires a server endpoint to list directory contents
+                    // Since we can't do that client-side due to security restrictions,
+                    // we'll create a mock implementation that looks for common file types
+                    console.log("Manifest file not found, using fallback method");
+                    return []; // In real implementation, this would call server endpoint
                 }
-
-                fullscreen.appendChild(mediaElement);
-                document.body.appendChild(fullscreen);
-
-                currentIndex = mediaItems.findIndex(item => item.src === src);
-
-                fullscreen.addEventListener('click', (e) => {
-                    if (e.target === fullscreen) {
-                        document.body.removeChild(fullscreen);
-                        currentIndex = -1;
+            } catch (error) {
+                console.error('Error loading local media:', error);
+                return [];
+            }
+        }
+        
+        // Load media from DigitalOcean Spaces
+        async function loadFromDigitalOcean() {
+            // In a real implementation, you'd use the DO Spaces API
+            // This requires server-side code to generate signed URLs for security
+            // Client-side access keys are insecure in production
+            console.log("Loading from DigitalOcean Spaces");
+            return [];
+        }
+        
+        // Load media from IPFS
+        async function loadFromIPFS() {
+            // This would typically come from a manifest file on IPFS
+            // that lists available media assets
+            // In a real implementation, you'd fetch the manifest from IPFS
+            console.log("Loading from IPFS");
+            return [];
+        }
+        
+        // Load media from Google Cloud Storage
+        async function loadFromGoogleCloud() {
+            // In a real implementation, you'd use Google Cloud Storage API
+            // This requires server-side code for security
+            console.log("Loading from Google Cloud Storage");
+            return [];
+        }
+        
+        // Render the gallery with media items
+        function renderGallery() {
+            galleryElement.innerHTML = '';
+            
+            mediaItems.forEach((item, index) => {
+                const mediaItem = createMediaElement(item, index);
+                galleryElement.appendChild(mediaItem);
+            });
+            
+            goToSlide(currentIndex);
+            
+            // Update visible slides after initial render
+            setTimeout(() => updateVisibleSlides(currentIndex), 100);
+        }
+        
+        // Advanced text content categorization system
+        function categorizeTextContent(content, filename) {
+            const lines = content.split('\n').filter(line => line.trim() !== '');
+            const wordCount = content.trim().split(/\s+/).length;
+            const lineCount = lines.length;
+            const charCount = content.length;
+            
+            // Check for poem characteristics (structured lines, stanzas)
+            const hasManyShortLines = lines.filter(line => line.trim().length < 30).length > lineCount * 0.6;
+            const hasEmptyLines = content.includes('\n\n'); // indicates stanzas
+            const hasRhymePattern = content.toLowerCase().split('\n').length > 4 && 
+                                  (content.includes('rhyme') || content.match(/\bthe\b/g) !== null);
+            
+            // Check for aphorism/rambling characteristics (short entries, quotes)
+            const hasQuotePattern = (content.match(/[""''""]/g) || []).length > 1;
+            const hasManyShortParagraphs = lines.filter(line => line.trim().length < 50).length > 3;
+            const hasListPattern = content.includes('- ') || content.includes('* ') || content.includes('1.') || content.includes('2.');
+            
+            // Check for article characteristics (longer paragraphs, structured)
+            const avgLineLength = content.length / lineCount;
+            const hasArticleStructure = content.toLowerCase().includes('introduction') || 
+                                      content.toLowerCase().includes('conclusion') ||
+                                      content.toLowerCase().includes('section') ||
+                                      content.toLowerCase().includes('abstract') ||
+                                      content.toLowerCase().includes('summary') ||
+                                      content.includes('# ') || content.includes('## '); // markdown headers
+            
+            // Check for magazine-like structure (subheadings, bylines)
+            const hasMagStructure = content.toLowerCase().includes('by ') || 
+                                  content.toLowerCase().includes('published') ||
+                                  content.toLowerCase().includes('issue') ||
+                                  content.toLowerCase().includes('volume') ||
+                                  content.includes('---') || content.includes('...') || 
+                                  content.match(/^#+\s.*$/gm) !== null;
+            
+            // Check for caption characteristics (very short, descriptive)
+            const isVeryShort = wordCount < 20;
+            const hasDescriptiveWords = content.toLowerCase().match(/\b(image|photo|figure|caption|view|scene|detail|illustration)\b/g) !== null;
+            
+            // Check for formal academic characteristics
+            const hasAcademicMarkers = content.toLowerCase().includes('abstract') ||
+                                     content.toLowerCase().includes('methodology') ||
+                                     content.toLowerCase().includes('references') ||
+                                     content.toLowerCase().includes('bibliography') ||
+                                     content.toLowerCase().includes('footnote') ||
+                                     content.match(/\[\d+\]/g) !== null; // Citation patterns
+            
+            // Check for magazine/newspaper article characteristics
+            const hasNewsMarkers = content.toLowerCase().includes('said') ||
+                                 content.toLowerCase().includes('report') ||
+                                 content.toLowerCase().includes('according to') ||
+                                 content.toLowerCase().includes('recently') ||
+                                 content.toLowerCase().includes('noted that');
+            
+            // Classification logic with more granularity
+            if (isVeryShort && hasDescriptiveWords) {
+                return 'caption';
+            } else if (wordCount < 50 && !hasArticleStructure && !hasMagStructure) {
+                return 'maximalist'; // Very short but impactful phrases
+            } else if (hasManyShortLines && hasEmptyLines && !hasRhymePattern) {
+                return 'poem';
+            } else if (hasRhymePattern && hasManyShortLines) {
+                return 'verse'; // For rhyming poems
+            } else if ((hasManyShortParagraphs || hasQuotePattern) && wordCount < 300) {
+                return 'aphorisms'; // Aphorisms, ramblings, quotes
+            } else if (hasMagStructure && wordCount > 200) {
+                return 'magazine'; // Magazine-style article
+            } else if (hasArticleStructure || hasAcademicMarkers || wordCount > 500) {
+                return 'article'; // Standard article
+            } else if (hasNewsMarkers || wordCount > 300) {
+                return 'news'; // News-style article
+            } else if (hasListPattern && wordCount < 500) {
+                return 'listicle'; // List-based content
+            } else {
+                return 'aphorisms'; // Default to aphorisms for medium-length unstructured content
+            }
+        }
+        
+        // Generate content layout based on category
+        function generateTextLayout(content, category, extension, filename) {
+            switch(category) {
+                case 'maximalist':
+                    // Full-page impactful phrase
+                    if (extension === '.md' || extension === '.markdown') {
+                        return `
+                            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; width: 100%;">
+                                <h1>${marked.parseInline(content.trim())}</h1>
+                            </div>
+                        `;
+                    } else {
+                        return `
+                            <div style="display: flex; flex-direction: column; justify-content: center; height: 100%; width: 100%;">
+                                <h1>${escapeHtml(content.trim())}</h1>
+                            </div>
+                        `;
+                    }
+                
+                case 'aphorisms':
+                    // Rambling entries with alternating alignment and positioning
+                    const lines = content.split('\n').filter(line => line.trim() !== '');
+                    let entriesHtml = '';
+                    
+                    lines.forEach((line, index) => {
+                        if (line.trim()) {
+                            // Alternate between left and right alignment
+                            const alignmentClass = index % 2 === 0 ? 'aphorism-left' : 'aphorism-right';
+                            entriesHtml += `
+                                <div class="aphorism-entry ${alignmentClass}">
+                                    ${extension === '.md' || extension === '.markdown' ? marked.parseInline(line.trim()) : escapeHtml(line.trim())}
+                                </div>
+                            `;
+                        }
+                    });
+                    
+                    return entriesHtml;
+                
+                case 'article':
+                    // Structured article format with formal typography
+                    if (extension === '.md' || extension === '.markdown') {
+                        return marked.parse(content, {
+                            gfm: true,
+                            breaks: true,
+                            smartypants: true
+                        });
+                    } else {
+                        // For plain text, add basic formatting
+                        const paragraphs = content.split(/\n\s*\n/);
+                        let formattedContent = '';
+                        
+                        paragraphs.forEach(paragraph => {
+                            if (paragraph.trim()) {
+                                // Check if this is a title (short line, few words)
+                                if (paragraph.trim().split(/\s+/).length < 10 && paragraph.length < 100) {
+                                    formattedContent += `<h2>${escapeHtml(paragraph.trim())}</h2>`;
+                                } else {
+                                    formattedContent += `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`;
+                                }
+                            }
+                        });
+                        
+                        return formattedContent;
+                    }
+                
+                case 'magazine':
+                    // Magazine-style layout with formal typography
+                    return generateMagazineLayout(content, extension);
+                
+                case 'poem':
+                    // Poem with line breaks preserved
+                    const lines = content.split('\n');
+                    let poemHtml = '<div class="poem-lines">';
+                    lines.forEach(line => {
+                        if (line.trim()) {
+                            poemHtml += `<div>${extension === '.md' || extension === '.markdown' ? marked.parseInline(line.trim()) : escapeHtml(line.trim())}</div>`;
+                        } else {
+                            poemHtml += '</div><div class="poem-lines">'; // New stanza
+                        }
+                    });
+                    poemHtml += '</div>';
+                    return poemHtml;
+                
+                case 'verse':
+                    // Rhyming verse with special formatting
+                    const verseLines = content.split('\n');
+                    let verseHtml = '<div class="poem-lines" style="font-style: italic;">';
+                    verseLines.forEach(line => {
+                        if (line.trim()) {
+                            verseHtml += `<div>${extension === '.md' || extension === '.markdown' ? marked.parseInline(line.trim()) : escapeHtml(line.trim())}</div>`;
+                        } else {
+                            verseHtml += '</div><div class="poem-lines" style="font-style: italic;">'; // New stanza
+                        }
+                    });
+                    verseHtml += '</div>';
+                    return verseHtml;
+                
+                case 'news':
+                    // News article format
+                    return generateNewsLayout(content, extension);
+                
+                case 'listicle':
+                    // List-based content
+                    return generateListicleLayout(content, extension);
+                
+                case 'caption':
+                    // Simple caption format
+                    if (extension === '.md' || extension === '.markdown') {
+                        return `<p>${marked.parseInline(content.trim())}</p>`;
+                    } else {
+                        return `<p>${escapeHtml(content.trim())}</p>`;
+                    }
+                
+                default:
+                    // Fallback to original behavior
+                    if (extension === '.md' || extension === '.markdown') {
+                        return marked.parse(content, {
+                            gfm: true,
+                            breaks: true,
+                            smartypants: true
+                        });
+                    } else {
+                        return `<p>${escapeHtml(content).replace(/\n/g, '<br>')}</p>`;
+                    }
+            }
+        }
+        
+        // Create a media element based on file type
+        function createMediaElement(item, index) {
+            const mediaItem = document.createElement('div');
+            mediaItem.className = 'media-item';
+            mediaItem.dataset.index = index;
+            
+            // Initially hide items that are not near the current index
+            if (Math.abs(index - currentIndex) > env.PRELOAD_DISTANCE) {
+                mediaItem.style.display = 'none';
+            }
+            
+            // Set seasonal class on media item if it's text content
+            if (textExtensions.includes(getFileExtension(item.filename).toLowerCase())) {
+                mediaItem.dataset.season = env.CURRENT_SEASON;
+            }
+            
+            const mediaContent = document.createElement('div');
+            mediaContent.className = 'media-content';
+            
+            const extension = getFileExtension(item.filename).toLowerCase();
+            
+            if (imageExtensions.includes(extension)) {
+                // Image content
+                const img = document.createElement('img');
+                img.src = item.url;
+                img.alt = item.filename;
+                img.loading = 'lazy';
+                // Add animation for image loading
+                img.style.opacity = '0';
+                img.onload = () => {
+                    // Smooth fade-in when image loads
+                    img.style.transition = 'opacity 0.5s ease-in-out';
+                    img.style.opacity = '1';
+                };
+                mediaContent.appendChild(img);
+            } else if (videoExtensions.includes(extension)) {
+                // Video content
+                const video = document.createElement('video');
+                video.src = item.url;
+                video.controls = false;
+                video.muted = true;
+                video.loop = true;
+                video.autoplay = env.AUTO_PLAY_VIDEOS;
+                video.playsInline = true; // For iOS Safari
+                // Only preload metadata for videos not near current index
+                video.preload = Math.abs(index - currentIndex) <= env.PRELOAD_DISTANCE ? 'auto' : 'metadata';
+                
+                // Add play/pause on click
+                video.addEventListener('click', () => {
+                    if (video.paused) {
+                        video.play();
+                    } else {
+                        video.pause();
                     }
                 });
-
-                document.addEventListener('keydown', handleKeyPress);
-                fullscreen.addEventListener('touchstart', handleTouchStart, false);
-                fullscreen.addEventListener('touchend', handleTouchEnd, false);
-            }
-
-            // Function to handle key presses
-            function handleKeyPress(event) {
-                if (currentIndex === -1) return;
-
-                if (event.key === 'ArrowLeft') {
-                    showPreviousMedia();
-                } else if (event.key === 'ArrowRight') {
-                    showNextMedia();
+                
+                mediaContent.appendChild(video);
+            } else if (audioExtensions.includes(extension)) {
+                // Audio content with visualization
+                const audioContainer = document.createElement('div');
+                audioContainer.className = 'audio-content';
+                
+                const title = document.createElement('h3');
+                title.textContent = item.filename;
+                audioContainer.appendChild(title);
+                
+                const vizContainer = document.createElement('div');
+                vizContainer.className = 'audio-visualization';
+                vizContainer.id = `audio-viz-${index}`;
+                audioContainer.appendChild(vizContainer);
+                
+                const audioInfo = document.createElement('div');
+                audioInfo.className = 'audio-info';
+                
+                const audio = document.createElement('audio');
+                audio.src = item.url;
+                audio.controls = false; // Hide controls since we're auto-playing
+                audio.preload = 'auto'; // Preload audio for smooth playback
+                audio.autoplay = env.AUTO_PLAY_AUDIO; // Enable audio autoplay as requested
+                audioInfo.appendChild(audio);
+                
+                audioContainer.appendChild(audioInfo);
+                mediaContent.appendChild(audioContainer);
+                
+                // Initialize waveform visualization only when near current index
+                if (Math.abs(index - currentIndex) <= env.PRELOAD_DISTANCE) {
+                    setTimeout(() => {
+                        initAudioVisualization(`audio-viz-${index}`, item.url, index);
+                    }, 100);
                 }
-            }
-
-            // Function to show the previous media
-            function showPreviousMedia() {
-                currentIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
-                updateFullscreenMedia();
-            }
-
-            // Function to show the next media
-            function showNextMedia() {
-                currentIndex = (currentIndex + 1) % mediaItems.length;
-                updateFullscreenMedia();
-            }
-
-            // Function to handle touch start
-            function handleTouchStart(event) {
-                touchStartX = event.changedTouches[0].screenX;
-            }
-
-            // Function to handle touch end
-            function handleTouchEnd(event) {
-                touchEndX = event.changedTouches[0].screenX;
-                handleSwipe();
-            }
-
-            // Function to handle swipe
-            function handleSwipe() {
-                const swipeThreshold = 50;
-                if (touchEndX < touchStartX - swipeThreshold) {
-                    showNextMedia();
-                } else if (touchEndX > touchStartX + swipeThreshold) {
-                    showPreviousMedia();
-                }
-            }
-
-            // Updated updateFullscreenMedia function
-            function updateFullscreenMedia() {
-                const fullscreen = document.querySelector('.fullscreen');
-                if (fullscreen) {
-                    const currentMedia = mediaItems[currentIndex];
-                    let mediaElement;
-
-                    if (currentMedia.type === 'image') {
-                        mediaElement = document.createElement('img');
-                        mediaElement.src = currentMedia.src;
-                    } else if (currentMedia.type === 'video') {
-                        mediaElement = document.createElement('video');
-                        mediaElement.src = currentMedia.src;
-                        mediaElement.controls = true;
-                        mediaElement.autoplay = true;
-                        mediaElement.loop = true;
+            } else if (textExtensions.includes(extension)) {
+                // Text/Markdown content with intelligent categorization
+                const textContainer = document.createElement('div');
+                
+                // Apply a random zine style to each text item
+                const randomStyle = zineStyles[Math.floor(Math.random() * zineStyles.length)];
+                
+                // Start with basic classes
+                textContainer.className = `text-content ${env.CURRENT_SEASON} ${randomStyle}`;
+                
+                // Add loading indicator
+                textContainer.innerHTML = '<p>Loading content...</p>';
+                
+                // Fetch and categorize content
+                fetchTextContent(item.url).then(content => {
+                    // Categorize the text content
+                    const category = categorizeTextContent(content, item.filename);
+                    
+                    // Add category class to the text container
+                    textContainer.classList.add(`category-${category}`);
+                    
+                    // Generate layout based on category
+                    textContainer.innerHTML = generateTextLayout(content, category, extension);
+                    
+                    // Handle poem titles specially
+                    if (category === 'poem' && content.trim().split('\n')[0].length < 100 && !content.trim().split('\n')[0].includes(' ')) {
+                        const firstLine = content.trim().split('\n')[0];
+                        const restOfPoem = content.trim().split('\n').slice(1).join('\n');
+                        textContainer.innerHTML = `
+                            <div class="poem-title">${escapeHtml(firstLine)}</div>
+                            <div class="poem-lines">
+                                ${restOfPoem.split('\n').filter(line => line.trim() !== '').map(line => 
+                                    `<div>${escapeHtml(line)}</div>`
+                                ).join('')}
+                            </div>
+                        `;
                     }
-
-                    fullscreen.innerHTML = '';
-                    fullscreen.appendChild(mediaElement);
+                    
+                    // Update archive counts if enabled
+                    if (window.galleryArchive && window.galleryArchive.textCategories[category]) {
+                        window.galleryArchive.textCategories[category].count += 1;
+                    }
+                    
+                    // Store category in media item for archival purposes
+                    if (mediaItems[index]) {
+                        mediaItems[index].textCategory = category;
+                        
+                        // Also attempt to find associated images for all text content types
+                        findAssociatedImages(item.filename).then(images => {
+                            if (images.length > 0) {
+                                // Add the first associated image to the content (for articles, poems, etc.)
+                                addImageToTextContent(index, images[0].url, images[0].caption);
+                            }
+                        });
+                    }
+                }).catch(err => {
+                    textContainer.innerHTML = `<p>Error loading content: ${err.message}</p>`;
+                });
+                
+                mediaContent.appendChild(textContainer);
+            }
+            
+            mediaItem.appendChild(mediaContent);
+            return mediaItem;
+        }
+        
+        // Generate magazine-style layout
+        function generateMagazineLayout(content, extension) {
+            if (extension === '.md' || extension === '.markdown') {
+                // Parse markdown and add magazine-specific classes
+                let html = marked.parse(content, {
+                    gfm: true,
+                    breaks: true,
+                    smartypants: true
+                });
+                
+                // Add magazine styling classes
+                html = html.replace(/<h1>(.*?)<\/h1>/, '<h1>$1</h1>');
+                html = html.replace(/<h2>(.*?)<\/h2>/g, '<div class="section-title">$1</div>');
+                return html;
+            } else {
+                // Parse plain text for magazine structure
+                const paragraphs = content.split(/\n\s*\n/);
+                let formattedContent = '';
+                
+                // Find title (first short paragraph)
+                const title = paragraphs[0] && paragraphs[0].split(/\s+/).length < 10 && paragraphs[0].length < 100 
+                    ? paragraphs.shift() : '';
+                const author = paragraphs[1] && paragraphs[1].toLowerCase().includes('by ') 
+                    ? paragraphs.splice(1, 1)[0] : '';
+                
+                if (title) {
+                    formattedContent += `<h1>${escapeHtml(title.trim())}</h1>`;
+                }
+                if (author) {
+                    formattedContent += `<div class="author">${escapeHtml(author.trim())}</div>`;
+                }
+                
+                // Process remaining paragraphs
+                paragraphs.forEach(paragraph => {
+                    if (paragraph.trim()) {
+                        if (paragraph.trim().split(/\s+/).length < 10 && paragraph.length < 100) {
+                            // Short lines might be section headers
+                            formattedContent += `<div class="section-title">${escapeHtml(paragraph.trim())}</div>`;
+                        } else {
+                            formattedContent += `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`;
+                        }
+                    }
+                });
+                
+                return formattedContent;
+            }
+        }
+        
+        // Generate news-style layout
+        function generateNewsLayout(content, extension) {
+            if (extension === '.md' || extension === '.markdown') {
+                return marked.parse(content, {
+                    gfm: true,
+                    breaks: true,
+                    smartypants: true
+                });
+            } else {
+                const paragraphs = content.split(/\n\s*\n/);
+                let formattedContent = '';
+                
+                // Identify news elements
+                let title = '';
+                let byline = '';
+                
+                for (let i = 0; i < Math.min(3, paragraphs.length); i++) {
+                    const para = paragraphs[i];
+                    if (para.split(/\s+/).length < 10 && para.length < 100 && !title) {
+                        title = para;
+                        paragraphs[i] = '';
+                    } else if (para.toLowerCase().includes('by ') && !byline) {
+                        byline = para;
+                        paragraphs[i] = '';
+                    }
+                }
+                
+                if (title) {
+                    formattedContent += `<h1 style="text-align: left; color: #fff;">${escapeHtml(title.trim())}</h1>`;
+                }
+                if (byline) {
+                    formattedContent += `<div class="byline" style="margin-bottom: 1.5rem;">${escapeHtml(byline.trim())}</div>`;
+                }
+                
+                paragraphs.forEach(paragraph => {
+                    if (paragraph.trim()) {
+                        formattedContent += `<p>${escapeHtml(paragraph).replace(/\n/g, '<br>')}</p>`;
+                    }
+                });
+                
+                return formattedContent;
+            }
+        }
+        
+        // Generate listicle layout
+        function generateListicleLayout(content, extension) {
+            if (extension === '.md' || extension === '.markdown') {
+                return marked.parse(content, {
+                    gfm: true,
+                    breaks: true,
+                    smartypants: true
+                });
+            } else {
+                const lines = content.split('\n');
+                let formattedContent = '<ol>';
+                
+                lines.forEach(line => {
+                    if (line.trim() && (line.startsWith('- ') || line.match(/^\d+\./) || line.match(/^[a-zA-Z]\./))) {
+                        formattedContent += `<li>${escapeHtml(line.replace(/^[^a-zA-Z0-9]*\s*/, ''))}</li>`;
+                    } else if (line.trim()) {
+                        formattedContent += `<p>${escapeHtml(line.trim())}</p>`;
+                    }
+                });
+                
+                formattedContent += '</ol>';
+                return formattedContent;
+            }
+        }
+        
+        // Function to find associated images for text content
+        async function findAssociatedImages(textFilename) {
+            const textBasename = textFilename.replace(/\.[^/.]+$/, ""); // Remove extension
+            const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp'];
+            
+            try {
+                // In a real implementation, this would query a media API or directory listing
+                // For now, we'll look for common naming patterns in the same directory
+                // This is a simplified example - in a real app, you'd have a database or API
+                const potentialImages = [];
+                
+                // Look for common patterns like textfilename.jpg, textfilename-image.jpg, etc.
+                for (const ext of imageExtensions) {
+                    potentialImages.push(`${textBasename}${ext}`);
+                    potentialImages.push(`${textBasename}_image${ext}`);
+                    potentialImages.push(`${textBasename}-img${ext}`);
+                    potentialImages.push(`${textBasename}-background${ext}`);
+                }
+                
+                // In a real implementation, you would check if these files exist
+                // For demo purposes, return example image paths
+                // In a real app, you would use a backend service to check file existence
+                return potentialImages.map((imgName, idx) => ({
+                    url: `./content/${imgName}`, // This would be dynamically determined
+                    caption: `Associated image ${idx + 1} for ${textBasename}`,
+                    type: 'inline' // or 'background'
+                })).slice(0, 2); // Return first 2 as example
+                
+            } catch (error) {
+                console.error('Error finding associated images:', error);
+                return [];
+            }
+        }
+        
+        // Function to add image to text content
+        function addImageToTextContent(index, imageUrl, caption = '', imageType = 'inline') {
+            if (mediaItems[index] && textExtensions.includes(getFileExtension(mediaItems[index].filename))) {
+                const textContainer = document.querySelector(`.media-item[data-index="${index}"] .text-content`);
+                if (textContainer) {
+                    if (imageType === 'background') {
+                        // Apply as background image
+                        textContainer.style.backgroundImage = `url('${imageUrl}')`;
+                        textContainer.style.backgroundSize = 'cover';
+                        textContainer.style.backgroundPosition = 'center';
+                        textContainer.style.backgroundBlendMode = 'multiply'; // Blend text with background
+                    } else {
+                        // Create image element for inline display
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imageUrl;
+                        imgElement.className = 'article-image';
+                        imgElement.alt = caption || 'Associated image';
+                        
+                        // Create caption element if provided
+                        if (caption) {
+                            const captionElement = document.createElement('div');
+                            captionElement.className = 'caption';
+                            captionElement.textContent = caption;
+                            
+                            // Insert image and caption into the text container
+                            textContainer.appendChild(imgElement);
+                            textContainer.appendChild(captionElement);
+                        } else {
+                            textContainer.appendChild(imgElement);
+                        }
+                    }
                 }
             }
-
-            // New function to handle scrolling
-            function startScroll(direction) {
-                stopScroll();
-                scrollInterval = setInterval(() => {
-                    gallery.scrollLeft += direction * 50; // Adjust scroll speed here
-                }, 16); // Approximately 60fps
+        }
+        
+        // Initialize audio visualization using wavesurfer.js
+        function initAudioVisualization(containerId, audioUrl, index) {
+            // Check if the element still exists (in case of rapid navigation)
+            if (!document.getElementById(containerId)) return;
+            
+            const wavesurfer = WaveSurfer.create({
+                container: `#${containerId}`,
+                waveColor: '#6c63ff',
+                progressColor: '#4a45c4',
+                cursorColor: '#fff',
+                barWidth: 3,
+                barRadius: 2,
+                barGap: 1,
+                height: 200,
+                responsive: true,
+                normalize: true,
+                partialRender: true
+            });
+            
+            wavesurfer.load(audioUrl);
+            
+            // Auto-play when visualization is ready if enabled
+            wavesurfer.on('ready', () => {
+                if (env.AUTO_PLAY_AUDIO) {
+                    wavesurfer.play().catch(e => console.log("Auto-play prevented by browser policy:", e));
+                }
+            });
+            
+            // Store wavesurfer instance for potential cleanup
+            mediaItems[index].wavesurfer = wavesurfer;
+        }
+        
+        // Fetch text content from URL
+        async function fetchTextContent(url) {
+            const response = await fetch(url);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-
-            function stopScroll() {
-                if (scrollInterval) {
-                    clearInterval(scrollInterval);
-                    scrollInterval = null;
+            return await response.text();
+        }
+        
+        // Escape HTML to prevent XSS
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+        
+        // Get file extension
+        function getFileExtension(filename) {
+            return filename.slice(filename.lastIndexOf('.')).toLowerCase();
+        }
+        
+        // Initialize controls
+        function initControls() {
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft') showPrevious();
+                if (e.key === 'ArrowRight') showNext();
+                
+                // Hidden developer controls for seasonal layout cycling (Ctrl+Shift+1-4)
+                if (e.ctrlKey && e.shiftKey) {
+                    if (e.key === '1') switchSeason('season-1');
+                    if (e.key === '2') switchSeason('season-2');
+                    if (e.key === '3') switchSeason('season-3');
+                    if (e.key === '4') switchSeason('season-4');
+                }
+            });
+            
+            // Touch/swipe support
+            let touchStartX = 0;
+            let touchEndX = 0;
+            
+            galleryElement.addEventListener('touchstart', e => {
+                touchStartX = e.changedTouches[0].screenX;
+            }, false);
+            
+            galleryElement.addEventListener('touchend', e => {
+                touchEndX = e.changedTouches[0].screenX;
+                handleSwipe();
+            }, false);
+            
+            // Mouse drag support
+            let isDragging = false;
+            let dragStartX = 0;
+            
+            galleryElement.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                dragStartX = e.clientX;
+                galleryElement.style.cursor = 'grabbing';
+            });
+            
+            galleryElement.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                // Could add visual feedback here
+            });
+            
+            galleryElement.addEventListener('mouseup', (e) => {
+                if (isDragging) {
+                    const dragEndX = e.clientX;
+                    const diffX = dragStartX - dragEndX;
+                    
+                    if (Math.abs(diffX) > 50) { // Threshold for swipe
+                        if (diffX > 0) {
+                            showNext(); // Swipe left - next
+                        } else {
+                            showPrevious(); // Swipe right - previous
+                        }
+                    }
+                    
+                    isDragging = false;
+                    galleryElement.style.cursor = 'default';
+                }
+            });
+            
+            galleryElement.addEventListener('mouseleave', () => {
+                isDragging = false;
+                galleryElement.style.cursor = 'default';
+            });
+        }
+        
+        // Handle swipe gesture
+        function handleSwipe() {
+            const minSwipeDistance = 50;
+            
+            if (touchStartX - touchEndX > minSwipeDistance) {
+                // Swipe left - next
+                showNext();
+            } else if (touchEndX - touchStartX > minSwipeDistance) {
+                // Swipe right - previous
+                showPrevious();
+            }
+        }
+        
+        // Show next media item
+        function showNext() {
+            if (isAnimating || mediaItems.length <= 1) return;
+            
+            currentIndex = (currentIndex + 1) % mediaItems.length;
+            goToSlide(currentIndex);
+        }
+        
+        // Show previous media item
+        function showPrevious() {
+            if (isAnimating || mediaItems.length <= 1) return;
+            
+            currentIndex = (currentIndex - 1 + mediaItems.length) % mediaItems.length;
+            goToSlide(currentIndex);
+        }
+        
+        // Go to specific slide with enhanced animation
+        function goToSlide(index) {
+            if (isAnimating) return;
+            
+            isAnimating = true;
+            
+            // Pause any playing audio in the current slide
+            pauseCurrentAudio();
+            
+            // Fade out current slide before transition
+            const currentSlide = galleryElement.children[currentIndex];
+            if (currentSlide) {
+                currentSlide.style.transition = 'opacity 0.25s ease-in-out';
+                currentSlide.style.opacity = '0';
+            }
+            
+            // Wait for fade out before sliding
+            setTimeout(() => {
+                // Calculate the translateX value to move to the correct slide
+                const translateX = -index * 100;
+                
+                // Apply the transformation with smooth transition and custom easing
+                galleryElement.style.transition = `transform ${env.SMOOTH_SCROLL_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                galleryElement.style.transform = `translateX(${translateX}%)`;
+                
+                // After the slide transition completes
+                setTimeout(() => {
+                    // Fade in the new slide
+                    const newSlide = galleryElement.children[index];
+                    if (newSlide) {
+                        newSlide.style.transition = 'opacity 0.25s ease-in-out 0.1s';
+                        newSlide.style.opacity = '1';
+                    }
+                    
+                    // Show nearby slides and hide distant ones for performance
+                    updateVisibleSlides(index);
+                    
+                    playCurrentAudio();
+                    isAnimating = false;
+                }, env.SMOOTH_SCROLL_DURATION - 50); // Slightly before to feel smoother
+            }, 250); // Match the fade out duration
+        }
+        
+        // Pause audio in current slide
+        function pauseCurrentAudio() {
+            const currentMedia = mediaItems[currentIndex];
+            if (currentMedia && currentMedia.wavesurfer) {
+                currentMedia.wavesurfer.pause();
+            }
+        }
+        
+        // Play audio in current slide
+        function playCurrentAudio() {
+            const currentMedia = mediaItems[currentIndex];
+            if (currentMedia && currentMedia.wavesurfer && env.AUTO_PLAY_AUDIO) {
+                // Try to play the audio if auto-play is enabled
+                currentMedia.wavesurfer.play().catch(e => console.log("Auto-play prevented by browser policy:", e));
+            }
+        }
+        
+        // Update which slides are visible for performance
+        function updateVisibleSlides(currentIndex) {
+            const slides = galleryElement.children;
+            
+            for (let i = 0; i < slides.length; i++) {
+                const slide = slides[i];
+                if (Math.abs(i - currentIndex) <= env.PRELOAD_DISTANCE) {
+                    // Show slides that are within preload distance
+                    slide.style.display = 'flex';
+                    // If it's an audio slide that hasn't been initialized yet, initialize it
+                    if (mediaItems[i] && mediaItems[i].type === 'audio' && !mediaItems[i].wavesurfer) {
+                        const vizContainer = document.getElementById(`audio-viz-${i}`);
+                        if (vizContainer && vizContainer.children.length === 0) {
+                            initAudioVisualization(`audio-viz-${i}`, mediaItems[i].url, i);
+                        }
+                    }
+                } else {
+                    // Hide slides that are far from current position
+                    slide.style.display = 'none';
                 }
             }
-
-            // Event listeners for scroll areas
-            scrollLeft.addEventListener('mouseenter', () => startScroll(-1));
-            scrollLeft.addEventListener('mouseleave', stopScroll);
-            scrollRight.addEventListener('mouseenter', () => startScroll(1));
-            scrollRight.addEventListener('mouseleave', stopScroll);
-
-            loadMedia();
-        });
+        }
+        
+        // Function to switch to a different seasonal layout
+        function switchSeason(seasonName) {
+            // Update the environment variable
+            env.CURRENT_SEASON = seasonName;
+            
+            // Update all text content elements to use the new season
+            const textElements = document.querySelectorAll('.text-content');
+            textElements.forEach(element => {
+                // Remove any existing season class
+                element.classList.remove('season-1', 'season-2', 'season-3', 'season-4');
+                // Add the new season class
+                element.classList.add(seasonName);
+            });
+        }
+        
+        // Function to tag media items for archival purposes with additional metadata
+        function tagMediaForArchive(index, tags, metadata = {}) {
+            if (mediaItems[index]) {
+                if (!mediaItems[index].archiveTags) {
+                    mediaItems[index].archiveTags = [];
+                }
+                mediaItems[index].archiveTags = [...new Set([...mediaItems[index].archiveTags, ...tags])];
+                
+                // Add metadata including text categorization if it's a text item
+                if (!mediaItems[index].archiveMetadata) {
+                    mediaItems[index].archiveMetadata = {};
+                }
+                Object.assign(mediaItems[index].archiveMetadata, metadata);
+            }
+        }
+        
+        // Function to add background image to text content
+        function addTextBackground(index, imageUrl) {
+            if (mediaItems[index] && textExtensions.includes(getFileExtension(mediaItems[index].filename))) {
+                const textContainer = document.querySelector(`.media-item[data-index="${index}"] .text-content`);
+                if (textContainer) {
+                    textContainer.style.backgroundImage = `url('${imageUrl}')`;
+                    textContainer.style.backgroundSize = 'cover';
+                    textContainer.style.backgroundPosition = 'center';
+                    textContainer.style.backgroundBlendMode = 'multiply'; // Blend text with background
+                }
+            }
+        }
+        
+        // Function to get media items by archive tags
+        function getMediaByTag(tag) {
+            return mediaItems.filter(item => item.archiveTags && item.archiveTags.includes(tag));
+        }
+        
+        // Hidden archive functionality for future use
+        function initializeArchiveSystem() {
+            // Create an internal archive structure if enabled
+            if (env.ENABLE_ARCHIVE_MODE) {
+                // This would connect to an archive API in a real implementation
+                console.log("Archive system initialized");
+            }
+            
+            // Store initial layout state for potential archival
+            window.galleryArchive = {
+                layouts: {
+                    'season-1': { name: 'Classic Zine', active: true },
+                    'season-2': { name: 'Retro Futuristic', active: false },
+                    'season-3': { name: 'Minimalist', active: false },
+                    'season-4': { name: 'Cyberpunk', active: false }
+                },
+                textCategories: {
+                    'maximalist': { name: 'Full Page Maximalist', count: 0, active: true },
+                    'aphorisms': { name: 'Aphorisms & Ramblings', count: 0, active: true },
+                    'article': { name: 'Structured Articles', count: 0, active: true },
+                    'magazine': { name: 'Magazine Articles', count: 0, active: true },
+                    'news': { name: 'News Articles', count: 0, active: true },
+                    'poem': { name: 'Poetry', count: 0, active: true },
+                    'verse': { name: 'Verse & Rhyming', count: 0, active: true },
+                    'listicle': { name: 'Listicles & Lists', count: 0, active: true },
+                    'caption': { name: 'Captions', count: 0, active: true }
+                },
+                currentLayout: env.CURRENT_SEASON,
+                mediaCollection: [...mediaItems] // Clone current media items
+            };
+        }
+        
+        // Function to add background image to text content
+        function addTextBackground(index, imageUrl) {
+            if (mediaItems[index] && textExtensions.includes(getFileExtension(mediaItems[index].filename))) {
+                const textContainer = document.querySelector(`.media-item[data-index="${index}"] .text-content`);
+                if (textContainer) {
+                    textContainer.style.backgroundImage = `url('${imageUrl}')`;
+                    textContainer.style.backgroundSize = 'cover';
+                    textContainer.style.backgroundPosition = 'center';
+                    textContainer.style.backgroundBlendMode = 'multiply'; // Blend text with background
+                }
+            }
+        }
+        
+        // Function to get media items by archive tags
+        function getMediaByTag(tag) {
+            return mediaItems.filter(item => item.archiveTags && item.archiveTags.includes(tag));
+        }
+        
+        // Initialize the archive system when the gallery loads
+        initializeArchiveSystem();
     </script>
 </body>
 </html>
