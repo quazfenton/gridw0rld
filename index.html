@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>gridWorld - Digital Art Gallery</title>
     
+    <!-- Framer Motion for smooth animations -->
+    <script src="https://cdn.jsdelivr.net/npm/framer-motion@10.17.0/dist/framer-motion.js"></script>
+    
     <!-- Waveform visualization for audio -->
     <script src="https://cdn.jsdelivr.net/npm/wavesurfer.js@7.4.0/dist/wavesurfer.min.js"></script>
     
@@ -229,6 +232,101 @@
             background: rgba(0, 0, 0, 0.7);
             border: 2px inset #ff00ff;
             box-shadow: 0 0 15px rgba(255, 0, 255, 0.5);
+        }
+        
+        /* Season 5 - Additional layouts */
+        .text-content.season-5.zine-style-1 {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(45deg, #2c3e50, #34495e, #2c3e50);
+            border: 1px solid #ecf0f1;
+            border-left: 10px solid #3498db;
+            border-right: 10px solid #9b59b6;
+            padding: 2.5rem;
+            font-size: 1.2rem;
+            line-height: 1.8;
+        }
+        
+        .text-content.season-5.zine-style-2 {
+            font-family: 'Trebuchet MS', sans-serif;
+            background: rgba(0, 0, 0, 0.85);
+            border: 3px double #f1c40f;
+            color: #f1c40f;
+            text-shadow: 0 0 5px rgba(241, 196, 15, 0.5);
+            padding: 2rem;
+        }
+        
+        .text-content.season-5.zine-style-3 {
+            font-family: 'Courier New', monospace;
+            background: rgba(30, 30, 30, 0.95);
+            border: 1px solid #7f8c8d;
+            border-top: 5px solid #3498db;
+            border-bottom: 5px solid #e74c3c;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .text-content.season-5.zine-style-4 {
+            font-family: 'Impact', sans-serif;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="%23000000" opacity="0.9"/><path d="M0,0 L100,100 M100,0 L0,100" stroke="%23444" stroke-width="1"/></svg>');
+            border: 4px dashed #e67e22;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+        
+        .text-content.season-5.zine-style-5 {
+            font-family: 'Comic Sans MS', cursive;
+            background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+            color: #2c3e50;
+            border: 3px ridge #e74c3c;
+            border-radius: 15px;
+            box-shadow: 5px 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Season 6 - Additional layouts */
+        .text-content.season-6.zine-style-1 {
+            font-family: 'Palatino', serif;
+            background: rgba(245, 245, 220, 0.9);
+            border: 2px solid #8b4513;
+            border-left: 8px solid #8b4513;
+            color: #2c3e50;
+            font-style: italic;
+        }
+        
+        .text-content.season-6.zine-style-2 {
+            font-family: 'Arial Black', sans-serif;
+            background: #000;
+            color: #fff;
+            border: 1px solid #fff;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            line-height: 1.4;
+        }
+        
+        .text-content.season-6.zine-style-3 {
+            font-family: 'Lucida Console', monospace;
+            background: #002b36;
+            color: #859900;
+            border: 1px solid #859900;
+            font-size: 1rem;
+            line-height: 1.7;
+        }
+        
+        .text-content.season-6.zine-style-4 {
+            font-family: 'Brush Script MT', cursive;
+            background: linear-gradient(45deg, #d7bde2, #e6b0aa, #d7bde2);
+            color: #2c3e50;
+            text-align: center;
+            padding: 3rem;
+            border-radius: 50%;
+        }
+        
+        .text-content.season-6.zine-style-5 {
+            font-family: 'Helvetica Neue', sans-serif;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
         }
         
         /* Text Categories - Full Page Maximalist */
@@ -600,38 +698,88 @@
 
     <script>
         // Environment variables - in a real app, this would be loaded from the server
-        // For this demo, we'll hardcode values that would come from .env
-        const env = {
-            DIGITAL_OCEAN_ENABLED: false,
-            DIGITAL_OCEAN_ENDPOINT: 'https://your-space-name.sfo3.digitaloceanspaces.com',
-            DIGITAL_OCEAN_BUCKET: 'your-space-name',
-            DIGITAL_OCEAN_REGION: 'sfo3',
-            DIGITAL_OCEAN_ACCESS_KEY_ID: 'your_access_key',
-            DIGITAL_OCEAN_SECRET_ACCESS_KEY: 'your_secret_key',
-            
-            IPFS_ENABLED: false,
-            IPFS_GATEWAY_URL: 'https://ipfs.io/ipfs/',
-            PINATA_API_KEY: 'your_pinata_api_key',
-            PINATA_SECRET_API_KEY: 'your_pinata_secret_key',
-            
-            GOOGLE_CLOUD_ENABLED: false,
-            GOOGLE_CLOUD_BUCKET_NAME: 'your-bucket-name',
-            GOOGLE_CLOUD_PROJECT_ID: 'your-project-id',
-            GOOGLE_CLOUD_FIREBASE_API_KEY: 'your_firebase_api_key',
-            
-            LOCAL_ENABLED: true,
-            LOCAL_MEDIA_PATH: './content/',
-            
-            MAX_CONCURRENT_LOADS: 5,
-            PRELOAD_DISTANCE: 2,
-            SMOOTH_SCROLL_DURATION: 500,
-            AUTO_PLAY_VIDEOS: true,
-            AUTO_PLAY_AUDIO: true,  // Now enabled as requested
-            
-            // Seasonal layout configuration
-            CURRENT_SEASON: 'season-1', // Change this to switch layouts: 'season-1', 'season-2', 'season-3', 'season-4'
-            ENABLE_ARCHIVE_MODE: false, // Whether archive functionality is active
-        };
+        // For this demo, we'll load from a secure backend endpoint
+        let env = {};
+        
+        // Initialize environment from secure server endpoint
+        async function initializeEnvironment() {
+            try {
+                // In a real implementation, this would call your backend
+                // which securely manages the credentials
+                const response = await fetch('/api/gallery-env', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${getAuthToken()}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    env = await response.json();
+                } else {
+                    // Fallback to default values if server call fails
+                    env = {
+                        DIGITAL_OCEAN_ENABLED: false,
+                        DIGITAL_OCEAN_ENDPOINT: 'https://your-space-name.sfo3.digitaloceanspaces.com',
+                        DIGITAL_OCEAN_BUCKET: 'your-space-name',
+                        DIGITAL_OCEAN_REGION: 'sfo3',
+                        // Note: actual credentials should NEVER be sent to client
+                        // This is just using placeholder values for demo
+                        
+                        IPFS_ENABLED: false,
+                        IPFS_GATEWAY_URL: 'https://ipfs.io/ipfs/',
+                        PINATA_API_KEY: 'your_pinata_api_key', // Only public key if needed client-side
+                        
+                        GOOGLE_CLOUD_ENABLED: false,
+                        GOOGLE_CLOUD_BUCKET_NAME: 'your-bucket-name',
+                        GOOGLE_CLOUD_PROJECT_ID: 'your-project-id',
+                        
+                        LOCAL_ENABLED: true,
+                        LOCAL_MEDIA_PATH: './content/',
+                        
+                        MAX_CONCURRENT_LOADS: 5,
+                        PRELOAD_DISTANCE: 2,
+                        SMOOTH_SCROLL_DURATION: 500,
+                        AUTO_PLAY_VIDEOS: true,
+                        AUTO_PLAY_AUDIO: true,
+                        
+                        // Seasonal layout configuration
+                        CURRENT_SEASON: 'season-1', // Change this to switch layouts: 'season-1', 'season-2', 'season-3', 'season-4', 'season-5', 'season-6'
+                        ENABLE_ARCHIVE_MODE: false,
+                    };
+                }
+            } catch (error) {
+                console.error('Error loading environment:', error);
+                // Use default fallback values
+                env = {
+                    DIGITAL_OCEAN_ENABLED: false,
+                    DIGITAL_OCEAN_ENDPOINT: 'https://your-space-name.sfo3.digitaloceanspaces.com',
+                    DIGITAL_OCEAN_BUCKET: 'your-space-name',
+                    DIGITAL_OCEAN_REGION: 'sfo3',
+                    
+                    IPFS_ENABLED: false,
+                    IPFS_GATEWAY_URL: 'https://ipfs.io/ipfs/',
+                    PINATA_API_KEY: 'your_pinata_api_key',
+                    
+                    GOOGLE_CLOUD_ENABLED: false,
+                    GOOGLE_CLOUD_BUCKET_NAME: 'your-bucket-name',
+                    GOOGLE_CLOUD_PROJECT_ID: 'your-project-id',
+                    
+                    LOCAL_ENABLED: true,
+                    LOCAL_MEDIA_PATH: './content/',
+                    
+                    MAX_CONCURRENT_LOADS: 5,
+                    PRELOAD_DISTANCE: 2,
+                    SMOOTH_SCROLL_DURATION: 500,
+                    AUTO_PLAY_VIDEOS: true,
+                    AUTO_PLAY_AUDIO: true,
+                    
+                    // Seasonal layout configuration
+                    CURRENT_SEASON: 'season-1', // Change this to switch layouts: 'season-1', 'season-2', 'season-3', 'season-4', 'season-5', 'season-6'
+                    ENABLE_ARCHIVE_MODE: false,
+                };
+            }
+        }
         
         // Gallery state
         let mediaItems = [];
@@ -640,16 +788,19 @@
         let isAnimating = false;
         
         // Supported file extensions
-        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg', '.tiff', '.ico'];
-        const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v', '.3gp'];
-        const audioExtensions = ['.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac', '.wma'];
-        const textExtensions = ['.txt', '.md', '.markdown'];
+        const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg', '.tiff', '.ico', '.avif', '.heic', '.jfif'];
+        const videoExtensions = ['.mp4', '.webm', '.ogg', '.mov', '.avi', '.mkv', '.m4v', '.3gp', '.wmv', '.flv', '.m3u8'];
+        const audioExtensions = ['.mp3', '.flac', '.wav', '.ogg', '.m4a', '.aac', '.wma', '.opus', '.aiff', '.alac'];
+        const textExtensions = ['.txt', '.md', '.markdown', '.rtf', '.doc', '.docx'];
         
         // Zine style variations
-        const zineStyles = ['zine-style-1', 'zine-style-2', 'zine-style-3', 'zine-style-4', 'zine-style-5'];
+        const zineStyles = ['zine-style-1', 'zine-style-2', 'zine-style-3', 'zine-style-4', 'zine-style-5', 'zine-style-6'];
         
         // Initialize the gallery
         document.addEventListener('DOMContentLoaded', async () => {
+            // Initialize environment from secure source
+            await initializeEnvironment();
+            
             galleryElement = document.getElementById('gallery');
             
             // Load media from configured sources
@@ -721,28 +872,28 @@
                         const fileUrl = item.download_url;
                         
                         // Determine media type based on file extension
-                        if (fileName.match(/\.(jpe?g|png|gif|webp|bmp|svg)$/i)) {
+                        if (fileName.match(/\.(jpe?g|png|gif|webp|bmp|svg|tiff?|ico|avif|heic|jfif)$/i)) {
                             media.push({
                                 filename: item.name,
                                 url: fileUrl,
                                 type: 'image',
                                 source: 'github'
                             });
-                        } else if (fileName.match(/\.(mp4|webm|ogg|mov|avi|mkv)$/i)) {
+                        } else if (fileName.match(/\.(mp4|webm|ogg|mov|avi|mkv|m4v|3gp|wmv|flv|m3u8)$/i)) {
                             media.push({
                                 filename: item.name,
                                 url: fileUrl,
                                 type: 'video',
                                 source: 'github'
                             });
-                        } else if (fileName.match(/\.(mp3|flac|wav|ogg|m4a)$/i)) {
+                        } else if (fileName.match(/\.(mp3|flac|wav|ogg|m4a|aac|wma|opus|aiff|alac)$/i)) {
                             media.push({
                                 filename: item.name,
                                 url: fileUrl,
                                 type: 'audio',
                                 source: 'github'
                             });
-                        } else if (fileName.match(/\.(txt|md|markdown)$/i)) {
+                        } else if (fileName.match(/\.(txt|md|markdown|rtf|doc|docx)$/i)) {
                             media.push({
                                 filename: item.name,
                                 url: fileUrl,
@@ -794,25 +945,120 @@
             // In a real implementation, you'd use the DO Spaces API
             // This requires server-side code to generate signed URLs for security
             // Client-side access keys are insecure in production
-            console.log("Loading from DigitalOcean Spaces");
-            return [];
+            // This is a placeholder for the server-side API call
+            try {
+                // In production, you would call your backend API to get signed URLs
+                // that can securely access your DigitalOcean Spaces content
+                const response = await fetch('/api/digitalocean-files', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: JSON.stringify({
+                        endpoint: env.DIGITAL_OCEAN_ENDPOINT,
+                        bucket: env.DIGITAL_OCEAN_BUCKET,
+                        region: env.DIGITAL_OCEAN_REGION
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.files.map(item => ({
+                        filename: item.name,
+                        url: item.url, // Pre-signed URL from backend
+                        type: item.type,
+                        source: 'digitalocean'
+                    }));
+                } else {
+                    console.error('Failed to load from DigitalOcean:', response.status);
+                    return [];
+                }
+            } catch (error) {
+                console.error('Error loading from DigitalOcean:', error);
+                return [];
+            }
+        }
+        
+        // Helper function to get authentication token
+        function getAuthToken() {
+            // In a real implementation, you'd retrieve this from secure storage
+            // or implement proper authentication
+            return localStorage.getItem('galleryAuthToken') || sessionStorage.getItem('galleryAuthToken');
         }
         
         // Load media from IPFS
         async function loadFromIPFS() {
-            // This would typically come from a manifest file on IPFS
-            // that lists available media assets
-            // In a real implementation, you'd fetch the manifest from IPFS
-            console.log("Loading from IPFS");
-            return [];
+            try {
+                // In a real implementation, you'd either:
+                // 1. Query a manifest file stored on IPFS that lists your content
+                // 2. Use Pinata API to get a list of your pinned files
+                // This requires a server-side endpoint for security
+                
+                const response = await fetch('/api/ipfs-files', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: JSON.stringify({
+                        gatewayUrl: env.IPFS_GATEWAY_URL,
+                        pinataApiKey: env.PINATA_API_KEY,
+                        // Only the API key is sent, secret should be stored server-side
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.files.map(item => ({
+                        filename: item.name,
+                        url: `${env.IPFS_GATEWAY_URL}${item.cid}`, // IPFS content identifier
+                        type: item.type,
+                        source: 'ipfs'
+                    }));
+                } else {
+                    console.error('Failed to load from IPFS:', response.status);
+                    return [];
+                }
+            } catch (error) {
+                console.error('Error loading from IPFS:', error);
+                return [];
+            }
         }
         
         // Load media from Google Cloud Storage
         async function loadFromGoogleCloud() {
-            // In a real implementation, you'd use Google Cloud Storage API
-            // This requires server-side code for security
-            console.log("Loading from Google Cloud Storage");
-            return [];
+            try {
+                // In a real implementation, you'd use a server-side endpoint
+                // to generate signed URLs for secure access to GCS content
+                const response = await fetch('/api/google-cloud-files', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${getAuthToken()}`
+                    },
+                    body: JSON.stringify({
+                        bucketName: env.GOOGLE_CLOUD_BUCKET_NAME,
+                        projectId: env.GOOGLE_CLOUD_PROJECT_ID
+                    })
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.files.map(item => ({
+                        filename: item.name,
+                        url: item.signedUrl, // Secure signed URL from backend
+                        type: item.type,
+                        source: 'googlecloud'
+                    }));
+                } else {
+                    console.error('Failed to load from Google Cloud:', response.status);
+                    return [];
+                }
+            } catch (error) {
+                console.error('Error loading from Google Cloud:', error);
+                return [];
+            }
         }
         
         // Render the gallery with media items
@@ -830,32 +1076,35 @@
             setTimeout(() => updateVisibleSlides(currentIndex), 100);
         }
         
-        // Advanced text content categorization system
+        // Advanced text content categorization system with improved accuracy
         function categorizeTextContent(content, filename) {
             const lines = content.split('\n').filter(line => line.trim() !== '');
             const wordCount = content.trim().split(/\s+/).length;
             const lineCount = lines.length;
             const charCount = content.length;
+            const paragraphCount = content.split(/\n\s*\n/).filter(p => p.trim() !== '').length;
             
             // Check for poem characteristics (structured lines, stanzas)
-            const hasManyShortLines = lines.filter(line => line.trim().length < 30).length > lineCount * 0.6;
+            const hasManyShortLines = lines.filter(line => line.trim().length < 40 && line.trim().length > 0).length > lineCount * 0.6;
             const hasEmptyLines = content.includes('\n\n'); // indicates stanzas
-            const hasRhymePattern = content.toLowerCase().split('\n').length > 4 && 
-                                  (content.includes('rhyme') || content.match(/\bthe\b/g) !== null);
+            const hasRhymePattern = (content.match(/\b(\w+)(?:\s+\w+)*\s+\1\b/gi) !== null) || 
+                                  (content.toLowerCase().includes('rhyme') || content.toLowerCase().includes('verse'));
             
             // Check for aphorism/rambling characteristics (short entries, quotes)
-            const hasQuotePattern = (content.match(/[""''""]/g) || []).length > 1;
-            const hasManyShortParagraphs = lines.filter(line => line.trim().length < 50).length > 3;
-            const hasListPattern = content.includes('- ') || content.includes('* ') || content.includes('1.') || content.includes('2.');
+            const hasQuotePattern = (content.match(/[""''""]/g) || []).length > 2;
+            const hasManyShortParagraphs = lines.filter(line => line.trim().length < 80 && line.trim().length > 5).length > 2;
+            const hasListPattern = (content.match(/^-|\*|\d+\./gm) || []).length > 2;
+            const hasTwitterPattern = wordCount < 280 && (content.includes('@') || content.includes('#'));
             
             // Check for article characteristics (longer paragraphs, structured)
-            const avgLineLength = content.length / lineCount;
+            const avgLineLength = content.length / Math.max(lineCount, 1);
+            const avgParagraphLength = wordCount / Math.max(paragraphCount, 1);
             const hasArticleStructure = content.toLowerCase().includes('introduction') || 
                                       content.toLowerCase().includes('conclusion') ||
                                       content.toLowerCase().includes('section') ||
                                       content.toLowerCase().includes('abstract') ||
                                       content.toLowerCase().includes('summary') ||
-                                      content.includes('# ') || content.includes('## '); // markdown headers
+                                      content.match(/^#+\s.+/gm) !== null; // markdown headers
             
             // Check for magazine-like structure (subheadings, bylines)
             const hasMagStructure = content.toLowerCase().includes('by ') || 
@@ -863,11 +1112,11 @@
                                   content.toLowerCase().includes('issue') ||
                                   content.toLowerCase().includes('volume') ||
                                   content.includes('---') || content.includes('...') || 
-                                  content.match(/^#+\s.*$/gm) !== null;
+                                  (content.match(/^#+\s.*$/gm) !== null && wordCount > 100);
             
             // Check for caption characteristics (very short, descriptive)
-            const isVeryShort = wordCount < 20;
-            const hasDescriptiveWords = content.toLowerCase().match(/\b(image|photo|figure|caption|view|scene|detail|illustration)\b/g) !== null;
+            const isVeryShort = wordCount < 25;
+            const hasCaptionMarkers = content.toLowerCase().match(/\b(image|photo|figure|caption|view|scene|detail|illustration|screenshot|depicts|shows|portrays)\b/g) !== null;
             
             // Check for formal academic characteristics
             const hasAcademicMarkers = content.toLowerCase().includes('abstract') ||
@@ -875,36 +1124,63 @@
                                      content.toLowerCase().includes('references') ||
                                      content.toLowerCase().includes('bibliography') ||
                                      content.toLowerCase().includes('footnote') ||
-                                     content.match(/\[\d+\]/g) !== null; // Citation patterns
+                                     content.toLowerCase().includes('acknowledgement') ||
+                                     content.match(/\[\d+\]/g) !== null || // Citation patterns
+                                     content.toLowerCase().includes('theorem') ||
+                                     content.toLowerCase().includes('lemma') ||
+                                     content.toLowerCase().includes('corollary');
             
             // Check for magazine/newspaper article characteristics
             const hasNewsMarkers = content.toLowerCase().includes('said') ||
                                  content.toLowerCase().includes('report') ||
                                  content.toLowerCase().includes('according to') ||
                                  content.toLowerCase().includes('recently') ||
-                                 content.toLowerCase().includes('noted that');
+                                 content.toLowerCase().includes('noted that') ||
+                                 content.toLowerCase().includes('yesterday') ||
+                                 content.toLowerCase().includes('today') ||
+                                 content.toLowerCase().includes('this week');
             
-            // Classification logic with more granularity
-            if (isVeryShort && hasDescriptiveWords) {
+            // Check for diary/journal characteristics
+            const hasDateMarkers = content.match(/\b\d{1,2}[\/\-]\d{1,2}[\/\-]\d{2,4}\b/) !== null ||
+                                 content.toLowerCase().includes('today') ||
+                                 content.toLowerCase().includes('yesterday') ||
+                                 content.toLowerCase().includes('dear diary') ||
+                                 content.toLowerCase().includes('journal entry');
+            
+            // Check for social media patterns
+            const hasSocialPattern = hasTwitterPattern || 
+                                   content.includes('RT') || 
+                                   content.includes('hashtag') ||
+                                   content.toLowerCase().includes('update') ||
+                                   (wordCount < 100 && content.includes('?') && content.includes('!'));
+            
+            // Enhanced classification logic with better granularity
+            if (isVeryShort && hasCaptionMarkers) {
                 return 'caption';
-            } else if (wordCount < 50 && !hasArticleStructure && !hasMagStructure) {
+            } else if (wordCount < 30 && !hasArticleStructure && !hasMagStructure && !hasListPattern) {
                 return 'maximalist'; // Very short but impactful phrases
+            } else if (hasDateMarkers && wordCount < 500) {
+                return 'journal'; // Personal journal/diary entry
+            } else if (hasSocialPattern && wordCount < 280) {
+                return 'social'; // Social media style content
             } else if (hasManyShortLines && hasEmptyLines && !hasRhymePattern) {
                 return 'poem';
             } else if (hasRhymePattern && hasManyShortLines) {
                 return 'verse'; // For rhyming poems
-            } else if ((hasManyShortParagraphs || hasQuotePattern) && wordCount < 300) {
+            } else if ((hasManyShortParagraphs || hasQuotePattern) && wordCount < 300 && !hasArticleStructure) {
                 return 'aphorisms'; // Aphorisms, ramblings, quotes
             } else if (hasMagStructure && wordCount > 200) {
                 return 'magazine'; // Magazine-style article
-            } else if (hasArticleStructure || hasAcademicMarkers || wordCount > 500) {
+            } else if (hasArticleStructure || hasAcademicMarkers || (wordCount > 500 && avgParagraphLength > 50)) {
                 return 'article'; // Standard article
-            } else if (hasNewsMarkers || wordCount > 300) {
+            } else if (hasNewsMarkers && wordCount > 100) {
                 return 'news'; // News-style article
             } else if (hasListPattern && wordCount < 500) {
                 return 'listicle'; // List-based content
+            } else if (wordCount > 1000) {
+                return 'longform'; // Long-form content
             } else {
-                return 'aphorisms'; // Default to aphorisms for medium-length unstructured content
+                return 'standard'; // Default category for regular content
             }
         }
         
@@ -1377,19 +1653,24 @@
             }
         }
         
-        // Initialize audio visualization using wavesurfer.js
+        // Initialize audio visualization using wavesurfer.js with enhanced effects
         function initAudioVisualization(containerId, audioUrl, index) {
             // Check if the element still exists (in case of rapid navigation)
             if (!document.getElementById(containerId)) return;
             
+            // Create a more sophisticated visualization
             const wavesurfer = WaveSurfer.create({
                 container: `#${containerId}`,
                 waveColor: '#6c63ff',
-                progressColor: '#4a45c4',
+                progressColor: {
+                    // Gradient progress color
+                    0: '#ff7eb9',
+                    1: '#ff758c'
+                },
                 cursorColor: '#fff',
-                barWidth: 3,
-                barRadius: 2,
-                barGap: 1,
+                barWidth: 4,
+                barRadius: 3,
+                barGap: 2,
                 height: 200,
                 responsive: true,
                 normalize: true,
@@ -1398,11 +1679,42 @@
             
             wavesurfer.load(audioUrl);
             
+            // Add play/pause toggle on click
+            document.getElementById(containerId).addEventListener('click', () => {
+                if (wavesurfer.isPlaying()) {
+                    wavesurfer.pause();
+                } else {
+                    wavesurfer.play();
+                }
+            });
+            
             // Auto-play when visualization is ready if enabled
             wavesurfer.on('ready', () => {
                 if (env.AUTO_PLAY_AUDIO) {
                     wavesurfer.play().catch(e => console.log("Auto-play prevented by browser policy:", e));
                 }
+            });
+            
+            // Add visual feedback when playing
+            wavesurfer.on('play', () => {
+                document.getElementById(containerId).style.boxShadow = '0 0 20px rgba(108, 99, 255, 0.7)';
+                document.getElementById(containerId).style.transform = 'scale(1.02)';
+                document.getElementById(containerId).style.transition = 'transform 0.3s ease, box-shadow 0.3s ease';
+            });
+            
+            wavesurfer.on('pause', () => {
+                document.getElementById(containerId).style.boxShadow = 'none';
+                document.getElementById(containerId).style.transform = 'scale(1)';
+            });
+            
+            // Add visual effect on finish
+            wavesurfer.on('finish', () => {
+                document.getElementById(containerId).style.boxShadow = '0 0 30px rgba(74, 69, 196, 0.9)';
+                setTimeout(() => {
+                    if (!wavesurfer.isPlaying()) {
+                        document.getElementById(containerId).style.boxShadow = 'none';
+                    }
+                }, 1000);
             });
             
             // Store wavesurfer instance for potential cleanup
@@ -1440,12 +1752,14 @@
                 if (e.key === 'ArrowLeft') showPrevious();
                 if (e.key === 'ArrowRight') showNext();
                 
-                // Hidden developer controls for seasonal layout cycling (Ctrl+Shift+1-4)
+                // Hidden developer controls for seasonal layout cycling (Ctrl+Shift+1-6)
                 if (e.ctrlKey && e.shiftKey) {
                     if (e.key === '1') switchSeason('season-1');
                     if (e.key === '2') switchSeason('season-2');
                     if (e.key === '3') switchSeason('season-3');
                     if (e.key === '4') switchSeason('season-4');
+                    if (e.key === '5') switchSeason('season-5');
+                    if (e.key === '6') switchSeason('season-6');
                 }
             });
             
@@ -1530,7 +1844,7 @@
             goToSlide(currentIndex);
         }
         
-        // Go to specific slide with enhanced animation
+        // Go to specific slide with enhanced animation using improved CSS transitions
         function goToSlide(index) {
             if (isAnimating) return;
             
@@ -1551,8 +1865,9 @@
                 // Calculate the translateX value to move to the correct slide
                 const translateX = -index * 100;
                 
-                // Apply the transformation with smooth transition and custom easing
-                galleryElement.style.transition = `transform ${env.SMOOTH_SCROLL_DURATION}ms cubic-bezier(0.25, 0.46, 0.45, 0.94)`;
+                // Apply the transformation with improved smooth transition and custom easing
+                // Using a more complex cubic-bezier for smoother acceleration/deceleration
+                galleryElement.style.transition = `transform ${env.SMOOTH_SCROLL_DURATION}ms cubic-bezier(0.23, 1, 0.32, 1)`;
                 galleryElement.style.transform = `translateX(${translateX}%)`;
                 
                 // After the slide transition completes
@@ -1560,17 +1875,20 @@
                     // Fade in the new slide
                     const newSlide = galleryElement.children[index];
                     if (newSlide) {
-                        newSlide.style.transition = 'opacity 0.25s ease-in-out 0.1s';
+                        newSlide.style.transition = 'opacity 0.25s ease-in-out 0.05s';
                         newSlide.style.opacity = '1';
                     }
                     
                     // Show nearby slides and hide distant ones for performance
                     updateVisibleSlides(index);
                     
+                    // Preload content near the new position
+                    preloadNearbyContent(index);
+                    
                     playCurrentAudio();
                     isAnimating = false;
-                }, env.SMOOTH_SCROLL_DURATION - 50); // Slightly before to feel smoother
-            }, 250); // Match the fade out duration
+                }, env.SMOOTH_SCROLL_DURATION - 25); // Slightly before to feel smoother
+            }, 150); // Reduced from 250ms for more responsive feel
         }
         
         // Pause audio in current slide
@@ -1590,7 +1908,7 @@
             }
         }
         
-        // Update which slides are visible for performance
+        // Update which slides are visible for performance with better resource management
         function updateVisibleSlides(currentIndex) {
             const slides = galleryElement.children;
             
@@ -1599,16 +1917,88 @@
                 if (Math.abs(i - currentIndex) <= env.PRELOAD_DISTANCE) {
                     // Show slides that are within preload distance
                     slide.style.display = 'flex';
-                    // If it's an audio slide that hasn't been initialized yet, initialize it
-                    if (mediaItems[i] && mediaItems[i].type === 'audio' && !mediaItems[i].wavesurfer) {
-                        const vizContainer = document.getElementById(`audio-viz-${i}`);
-                        if (vizContainer && vizContainer.children.length === 0) {
-                            initAudioVisualization(`audio-viz-${i}`, mediaItems[i].url, i);
+                    
+                    // For performance, only initialize audio when it becomes visible
+                    if (mediaItems[i] && mediaItems[i].type === 'audio') {
+                        // Only initialize if not already done
+                        if (!mediaItems[i].wavesurfer) {
+                            const vizContainer = document.getElementById(`audio-viz-${i}`);
+                            if (vizContainer && vizContainer.children.length === 0) {
+                                // Delay initialization slightly to prevent blocking
+                                setTimeout(() => {
+                                    initAudioVisualization(`audio-viz-${i}`, mediaItems[i].url, i);
+                                }, 50);
+                            }
+                        } else {
+                            // Ensure the visualization is visible if audio is loaded
+                            const vizContainer = document.getElementById(`audio-viz-${i}`);
+                            if (vizContainer && vizContainer.children.length === 0) {
+                                initAudioVisualization(`audio-viz-${i}`, mediaItems[i].url, i);
+                            }
+                        }
+                    }
+                    
+                    // For images, ensure they're loaded if they're close to view
+                    if (mediaItems[i] && mediaItems[i].type === 'image') {
+                        const imgElement = slide.querySelector('img');
+                        if (imgElement && !imgElement.src) {
+                            imgElement.src = mediaItems[i].url;
+                        }
+                    }
+                    
+                    // For videos, preload metadata if not currently playing
+                    if (mediaItems[i] && mediaItems[i].type === 'video' && i !== currentIndex) {
+                        const videoElement = slide.querySelector('video');
+                        if (videoElement && videoElement.preload !== 'metadata') {
+                            videoElement.preload = 'metadata';
                         }
                     }
                 } else {
-                    // Hide slides that are far from current position
+                    // Hide slides that are far from current position and potentially unload heavy resources
                     slide.style.display = 'none';
+                    
+                    // For audio slides that are far away, potentially unload to save memory
+                    if (mediaItems[i] && mediaItems[i].type === 'audio' && mediaItems[i].wavesurfer) {
+                        // Optionally destroy the wavesurfer instance to save memory for distant items
+                        // Note: This is commented out as it might cause issues when navigating back
+                        // mediaItems[i].wavesurfer.destroy();
+                        // mediaItems[i].wavesurfer = null;
+                    }
+                    
+                    // For videos, pause and set to lower preload level if far away
+                    if (mediaItems[i] && mediaItems[i].type === 'video') {
+                        const videoElement = slide.querySelector('video');
+                        if (videoElement) {
+                            videoElement.pause();
+                            videoElement.preload = 'none';
+                        }
+                    }
+                }
+            }
+        }
+        
+        // Enhanced performance: preload content before it's needed
+        function preloadNearbyContent(currentIndex) {
+            // Preload content in the next few positions to make transitions smoother
+            const preloadRange = Math.min(3, env.PRELOAD_DISTANCE + 1); // Slightly more than display range
+            
+            for (let i = Math.max(0, currentIndex - preloadRange); 
+                 i < Math.min(mediaItems.length, currentIndex + preloadRange + 1); i++) {
+                if (mediaItems[i]) {
+                    // Preload images by creating them off-screen
+                    if (mediaItems[i].type === 'image' && !mediaItems[i].preloaded) {
+                        const img = new Image();
+                        img.src = mediaItems[i].url;
+                        mediaItems[i].preloaded = true;
+                    }
+                    // Preload videos by setting preload attribute
+                    else if (mediaItems[i].type === 'video' && !mediaItems[i].preloaded) {
+                        mediaItems[i].preloaded = true;
+                    }
+                    // Preload audio by initiating wavesurfer when in range
+                    else if (mediaItems[i].type === 'audio' && !mediaItems[i].preloaded) {
+                        mediaItems[i].preloaded = true;
+                    }
                 }
             }
         }
@@ -1622,7 +2012,7 @@
             const textElements = document.querySelectorAll('.text-content');
             textElements.forEach(element => {
                 // Remove any existing season class
-                element.classList.remove('season-1', 'season-2', 'season-3', 'season-4');
+                element.classList.remove('season-1', 'season-2', 'season-3', 'season-4', 'season-5', 'season-6');
                 // Add the new season class
                 element.classList.add(seasonName);
             });
@@ -1634,13 +2024,195 @@
                 if (!mediaItems[index].archiveTags) {
                     mediaItems[index].archiveTags = [];
                 }
-                mediaItems[index].archiveTags = [...new Set([...mediaItems[index].archiveTags, ...tags])];
+                // Add new tags while avoiding duplicates
+                const newTags = tags.filter(tag => !mediaItems[index].archiveTags.includes(tag));
+                mediaItems[index].archiveTags = [...mediaItems[index].archiveTags, ...newTags];
                 
                 // Add metadata including text categorization if it's a text item
                 if (!mediaItems[index].archiveMetadata) {
                     mediaItems[index].archiveMetadata = {};
                 }
                 Object.assign(mediaItems[index].archiveMetadata, metadata);
+                
+                // Update archive tracking
+                if (window.galleryArchive) {
+                    newTags.forEach(tag => {
+                        window.galleryArchive.activeTags.add(tag);
+                    });
+                }
+            }
+        }
+        
+        // Enhanced tagging system with grouping capabilities
+        function tagMediaItems(indices, tags, projectGroup = null) {
+            if (!Array.isArray(indices)) {
+                indices = [indices]; // Convert single index to array
+            }
+            
+            indices.forEach(index => {
+                if (index >= 0 && index < mediaItems.length) {
+                    tagMediaForArchive(index, tags);
+                    
+                    // If project group is specified, add to that group
+                    if (projectGroup) {
+                        addToArchive(index, projectGroup, tags);
+                    }
+                }
+            });
+        }
+        
+        // Bulk tagging function for multiple items
+        function bulkTagByCategory(category, tags, projectGroup = null) {
+            mediaItems.forEach((item, index) => {
+                if (item.textCategory === category) {
+                    tagMediaForArchive(index, tags);
+                    if (projectGroup) {
+                        addToArchive(index, projectGroup, tags);
+                    }
+                }
+            });
+        }
+        
+        // Function to get media by multiple tags (AND operation)
+        function getMediaByTags(tagArray) {
+            if (!Array.isArray(tagArray) || tagArray.length === 0) return [];
+            
+            return mediaItems.filter(item => {
+                if (!item.archivalMetadata || !item.archivalMetadata.tags) return false;
+                
+                // Check if item has ALL specified tags
+                return tagArray.every(tag => item.archivalMetadata.tags.includes(tag));
+            });
+        }
+        
+        // Function to get media by any of the tags (OR operation)
+        function getMediaByAnyTag(tagArray) {
+            if (!Array.isArray(tagArray) || tagArray.length === 0) return [];
+            
+            return mediaItems.filter(item => {
+                if (!item.archivalMetadata || !item.archivalMetadata.tags) return false;
+                
+                // Check if item has ANY of the specified tags
+                return tagArray.some(tag => item.archivalMetadata.tags.includes(tag));
+            });
+        }
+        
+        // Function to create thematic collections based on tags
+        function createThematicCollection(name, tags, description = '') {
+            if (!window.galleryArchive) return false;
+            
+            if (!window.galleryArchive.thematicCollections) {
+                window.galleryArchive.thematicCollections = {};
+            }
+            
+            const collectionItems = getMediaByTags(tags);
+            const itemIds = collectionItems.map(item => item.archivalMetadata.id);
+            
+            window.galleryArchive.thematicCollections[name] = {
+                name,
+                description,
+                tags,
+                items: itemIds,
+                createdDate: new Date().toISOString(),
+                itemCount: itemIds.length,
+                layout: env.CURRENT_SEASON
+            };
+            
+            return true;
+        }
+        
+        // Function to get all media with a specific tag
+        function getMediaByTag(tag) {
+            if (!tag) return [];
+            
+            return mediaItems.filter(item => 
+                item.archivalMetadata && 
+                item.archivalMetadata.tags && 
+                item.archivalMetadata.tags.includes(tag)
+            );
+        }
+        
+        // Function to suggest related items based on shared tags
+        function getSuggestedRelatedItems(index, maxResults = 5) {
+            if (index < 0 || index >= mediaItems.length) return [];
+            
+            const currentItem = mediaItems[index];
+            if (!currentItem.archivalMetadata || !currentItem.archivalMetadata.tags) {
+                return [];
+            }
+            
+            const currentTags = currentItem.archivalMetadata.tags;
+            const relatedItems = [];
+            
+            mediaItems.forEach((item, itemIndex) => {
+                if (itemIndex === index) return; // Skip current item
+                
+                if (item.archivalMetadata && item.archivalMetadata.tags) {
+                    // Count how many tags they share
+                    const sharedTags = currentTags.filter(tag => 
+                        item.archivalMetadata.tags.includes(tag)
+                    ).length;
+                    
+                    if (sharedTags > 0) {
+                        relatedItems.push({
+                            index: itemIndex,
+                            item,
+                            sharedTagCount: sharedTags,
+                            tags: item.archivalMetadata.tags
+                        });
+                    }
+                }
+            });
+            
+            // Sort by number of shared tags (descending)
+            relatedItems.sort((a, b) => b.sharedTagCount - a.sharedTagCount);
+            
+            // Return top results
+            return relatedItems.slice(0, maxResults);
+        }
+        
+        // Function to add tags to a text content area dynamically
+        function addTagsToTextElement(index, tags) {
+            if (mediaItems[index] && textExtensions.includes(getFileExtension(mediaItems[index].filename))) {
+                const textContainer = document.querySelector(`.media-item[data-index="${index}"] .text-content`);
+                if (textContainer && tags && tags.length > 0) {
+                    // Create a tags display element if it doesn't exist
+                    let tagsElement = textContainer.querySelector('.content-tags');
+                    if (!tagsElement) {
+                        tagsElement = document.createElement('div');
+                        tagsElement.className = 'content-tags';
+                        tagsElement.style.cssText = `
+                            position: absolute;
+                            top: 10px;
+                            right: 10px;
+                            display: flex;
+                            flex-wrap: wrap;
+                            gap: 5px;
+                            z-index: 10;
+                        `;
+                        textContainer.style.position = 'relative';
+                        textContainer.appendChild(tagsElement);
+                    }
+                    
+                    // Add each tag as a small pill
+                    tags.forEach(tag => {
+                        const tagSpan = document.createElement('span');
+                        tagSpan.textContent = `#${tag}`;
+                        tagSpan.style.cssText = `
+                            background: rgba(255, 255, 255, 0.2);
+                            color: white;
+                            padding: 2px 8px;
+                            border-radius: 10px;
+                            font-size: 0.8rem;
+                            cursor: pointer;
+                        `;
+                        tagSpan.addEventListener('click', () => {
+                            // Maybe highlight other items with this tag
+                            console.log(`Clicked tag: ${tag}`);
+                        });
+                        tagsElement.appendChild(tagSpan);
+                    });
+                }
             }
         }
         
@@ -1673,25 +2245,164 @@
             // Store initial layout state for potential archival
             window.galleryArchive = {
                 layouts: {
-                    'season-1': { name: 'Classic Zine', active: true },
-                    'season-2': { name: 'Retro Futuristic', active: false },
-                    'season-3': { name: 'Minimalist', active: false },
-                    'season-4': { name: 'Cyberpunk', active: false }
+                    'season-1': { name: 'Classic Zine', active: true, description: 'Traditional zine aesthetic with classic typography' },
+                    'season-2': { name: 'Retro Futuristic', active: false, description: 'Synthwave and retro-futuristic visual elements' },
+                    'season-3': { name: 'Minimalist', active: false, description: 'Clean, minimal design with ample whitespace' },
+                    'season-4': { name: 'Cyberpunk', active: false, description: 'Neon-drenched cyberpunk aesthetic' }
                 },
                 textCategories: {
-                    'maximalist': { name: 'Full Page Maximalist', count: 0, active: true },
-                    'aphorisms': { name: 'Aphorisms & Ramblings', count: 0, active: true },
-                    'article': { name: 'Structured Articles', count: 0, active: true },
-                    'magazine': { name: 'Magazine Articles', count: 0, active: true },
-                    'news': { name: 'News Articles', count: 0, active: true },
-                    'poem': { name: 'Poetry', count: 0, active: true },
-                    'verse': { name: 'Verse & Rhyming', count: 0, active: true },
-                    'listicle': { name: 'Listicles & Lists', count: 0, active: true },
-                    'caption': { name: 'Captions', count: 0, active: true }
+                    'maximalist': { name: 'Full Page Maximalist', count: 0, active: true, description: 'Large, impactful statements taking full page' },
+                    'aphorisms': { name: 'Aphorisms & Ramblings', count: 0, active: true, description: 'Short quotes with alternating alignment' },
+                    'article': { name: 'Structured Articles', count: 0, active: true, description: 'Formal article-style text content' },
+                    'magazine': { name: 'Magazine Articles', count: 0, active: true, description: 'Magazine-style formatted text' },
+                    'news': { name: 'News Articles', count: 0, active: true, description: 'Journalistic style content' },
+                    'poem': { name: 'Poetry', count: 0, active: true, description: 'Verse content with line breaks preserved' },
+                    'verse': { name: 'Verse & Rhyming', count: 0, active: true, description: 'Rhyming poetic content' },
+                    'listicle': { name: 'Listicles & Lists', count: 0, active: true, description: 'List-based content' },
+                    'caption': { name: 'Captions', count: 0, active: true, description: 'Brief descriptive text for media' },
+                    'journal': { name: 'Personal Journal', count: 0, active: true, description: 'Diary-like personal entries' },
+                    'social': { name: 'Social Media', count: 0, active: true, description: 'Social media style posts' },
+                    'longform': { name: 'Long-form Content', count: 0, active: true, description: 'Extended text content' },
+                    'standard': { name: 'Standard Text', count: 0, active: true, description: 'Regular unclassified text content' }
                 },
                 currentLayout: env.CURRENT_SEASON,
-                mediaCollection: [...mediaItems] // Clone current media items
+                mediaCollection: [...mediaItems], // Clone current media items
+                projectGroups: {}, // Store media grouped by projects/seasons
+                thematicCollections: {}, // Store collections based on tags/themes
+                metadataHistory: {}, // Track changes to media metadata over time
+                creationTimeline: [], // Track when content was added
+                activeTags: new Set(), // Collection of all used tags
             };
+            
+            // Initialize creation timeline and project groups
+            initializeArchiveMetadata();
+        }
+        
+        // Initialize archive metadata for tracking
+        function initializeArchiveMetadata() {
+            // Add timestamp to all current media items
+            const now = new Date().toISOString();
+            
+            mediaItems.forEach((item, index) => {
+                if (!item.archivalMetadata) {
+                    item.archivalMetadata = {
+                        id: `item_${index}_${Date.now()}`,
+                        addedDate: now,
+                        lastAccessed: now,
+                        originalSource: item.source,
+                        format: getFileExtension(item.filename),
+                        tags: [],
+                        projectGroup: 'default', // Default project group
+                        isArchived: false
+                    };
+                }
+                
+                // Add to timeline
+                window.galleryArchive.creationTimeline.push({
+                    id: item.archivalMetadata.id,
+                    type: item.type,
+                    date: now,
+                    action: 'added'
+                });
+            });
+            
+            // Create default project group
+            window.galleryArchive.projectGroups['default'] = {
+                id: 'default',
+                name: 'Default Collection',
+                description: 'Initial collection of media items',
+                items: mediaItems.map(item => item.archivalMetadata.id),
+                createdDate: now,
+                layout: env.CURRENT_SEASON
+            };
+        }
+        
+        // Archive management functions
+        function addToArchive(itemIndex, projectGroup = null, tags = []) {
+            if (itemIndex < 0 || itemIndex >= mediaItems.length) return false;
+            
+            const item = mediaItems[itemIndex];
+            if (!item.archivalMetadata) {
+                // Initialize if not already done
+                const now = new Date().toISOString();
+                item.archivalMetadata = {
+                    id: `item_${itemIndex}_${Date.now()}`,
+                    addedDate: now,
+                    lastAccessed: now,
+                    originalSource: item.source,
+                    format: getFileExtension(item.filename),
+                    tags: [],
+                    projectGroup: projectGroup || 'default',
+                    isArchived: true
+                };
+            }
+            
+            // Update or set project group
+            if (projectGroup) {
+                item.archivalMetadata.projectGroup = projectGroup;
+                
+                // Add to project group if it doesn't exist
+                if (!window.galleryArchive.projectGroups[projectGroup]) {
+                    window.galleryArchive.projectGroups[projectGroup] = {
+                        id: projectGroup,
+                        name: projectGroup,
+                        description: `Collection: ${projectGroup}`,
+                        items: [],
+                        createdDate: new Date().toISOString(),
+                        layout: env.CURRENT_SEASON
+                    };
+                }
+                
+                // Add item to project group
+                if (!window.galleryArchive.projectGroups[projectGroup].items.includes(item.archivalMetadata.id)) {
+                    window.galleryArchive.projectGroups[projectGroup].items.push(item.archivalMetadata.id);
+                }
+            }
+            
+            // Add tags
+            if (tags && Array.isArray(tags)) {
+                tags.forEach(tag => {
+                    if (!item.archivalMetadata.tags.includes(tag)) {
+                        item.archivalMetadata.tags.push(tag);
+                        window.galleryArchive.activeTags.add(tag);
+                    }
+                });
+            }
+            
+            // Add to timeline
+            window.galleryArchive.creationTimeline.push({
+                id: item.archivalMetadata.id,
+                type: item.type,
+                date: new Date().toISOString(),
+                action: 'archived',
+                projectGroup: projectGroup || 'default'
+            });
+            
+            return true;
+        }
+        
+        function getArchivedByProject(projectName) {
+            const project = window.galleryArchive.projectGroups[projectName];
+            if (!project) return [];
+            
+            return project.items.map(itemId => {
+                return mediaItems.find(item => item.archivalMetadata && item.archivalMetadata.id === itemId);
+            }).filter(item => item !== undefined);
+        }
+        
+        function getArchivedByTag(tag) {
+            return mediaItems.filter(item => 
+                item.archivalMetadata && 
+                item.archivalMetadata.tags && 
+                item.archivalMetadata.tags.includes(tag)
+            );
+        }
+        
+        function getArchivedByLayout(layoutName) {
+            return mediaItems.filter(item => 
+                item.archivalMetadata && 
+                item.archivalMetadata.layout === layoutName
+            );
         }
         
         // Function to add background image to text content
